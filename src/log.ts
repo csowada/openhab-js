@@ -24,7 +24,7 @@ const MessageFormatter: any = Java.type("org.slf4j.helpers.MessageFormatter");
  * @memberof log
  * @hideconstructor
  */
-class Logger {
+export class Logger {
 
     appenderProvider: any;
     _name: string;
@@ -209,8 +209,4 @@ class Logger {
  */
 export default function (_name) {
     return new Logger(_name);
-}
-
-export {
-    Logger
 }

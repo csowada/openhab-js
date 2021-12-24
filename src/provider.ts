@@ -44,7 +44,3 @@ export class AbstractProvider {
         return hostProvider;
     }
 }
-
-// export = {
-//     AbstractProvider
-// }

@@ -7,9 +7,9 @@
  */
 
 import logger from "./log";
-const log = logger('itemchannellink');
 
 const ItemChannelLink: any = Java.type("org.openhab.core.thing.link.ItemChannelLink");
+const log = logger('itemchannellink');
 
 export const createItemChannelLink = function(itemName: string, channel: any) {
     log.debug("Creating item channel link {} -> {}", itemName, channel.uid);
