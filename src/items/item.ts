@@ -1,6 +1,6 @@
 import * as utils from "../utils";
-import logger from "../log";
 import * as metadata from "../metadata";
+import logger from "../log";
 import { ItemHistory } from "./item-history";
 
 const log = logger('item');
@@ -10,7 +10,7 @@ const log = logger('item');
  * 
  * @memberOf items
  */
-class Item {
+export class Item {
 
     rawItem: org.openhab.core.items.Item;
     history: ItemHistory;
@@ -189,10 +189,12 @@ class Item {
      * Adds groups to this item
      * @param {Array<String|Item>} groupNamesOrItems names of the groups (or the group items themselves)
      */
-    addGroups(...groupNamesOrItems) {
-        let groupNames = groupNamesOrItems.map((x) => (typeof x === 'string') ? x : x.name);
-        this.rawItem.addGroupNames(groupNames);
-        managedItemProvider.update(this.rawItem);
+    addGroups(...groupNamesOrItems: Array<string|Item>) {
+        if (this.rawItem instanceof org.openhab.core.items.GenericItem) {
+            let groupNames = groupNamesOrItems.map((x) => (typeof x === 'string') ? x : x.name);
+            this.rawItem.addGroupNames(utils.jsArrayToJavaList(groupNames));
+            managedItemProvider.update(this.rawItem);
+        }
     }
 
     /**
@@ -200,11 +202,13 @@ class Item {
      * @param {Array<String|Item>} groupNamesOrItems names of the groups (or the group items themselves)
      */
     removeGroups(...groupNamesOrItems) {
-        let groupNames = groupNamesOrItems.map((x) => (typeof x === 'string') ? x : x.name);
-        for (let groupName of groupNames) {
-            this.rawItem.removeGroupName(groupName);
+        if (this.rawItem instanceof org.openhab.core.items.GenericItem) {
+            let groupNames = groupNamesOrItems.map((x) => (typeof x === 'string') ? x : x.name);
+            for (let groupName of groupNames) {
+                this.rawItem.removeGroupName(groupName);
+            }
+            managedItemProvider.update(this.rawItem);
         }
-        managedItemProvider.update(this.rawItem);
     }
 
     /**
@@ -219,8 +223,10 @@ class Item {
      * @param {Array<String>} tagNames names of the tags to add
      */
     addTags(...tagNames) {
-        this.rawItem.addTags(tagNames);
-        managedItemProvider.update(this.rawItem);
+        if (this.rawItem instanceof org.openhab.core.items.GenericItem) {
+            this.rawItem.addTags(tagNames);
+            managedItemProvider.update(this.rawItem);
+        }
     }
 
     /**
@@ -228,11 +234,11 @@ class Item {
      * @param {Array<String>} tagNames names of the tags to remove
      */
     removeTags(...tagNames) {
-        for (let tagName of tagNames) {
-            this.rawItem.removeTag(tagName);
+        if (this.rawItem instanceof org.openhab.core.items.GenericItem) {
+            for (let tagName of tagNames) {
+                this.rawItem.removeTag(tagName);
+            }
+            managedItemProvider.update(this.rawItem);
         }
-        managedItemProvider.update(this.rawItem);
     }
 }
-
-module.exports = Item

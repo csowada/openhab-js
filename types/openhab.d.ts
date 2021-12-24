@@ -21,6 +21,8 @@ declare namespace org.openhab.core.items {
       getGroupNames(): java.util.List<string>;
       getLabel(): string;
       getName(): string;
+      name: string;
+
       getState(): org.openhab.core.types.State;
       state: org.openhab.core.types.State;
       getStateAs<T>(arg0: T): T;
@@ -34,12 +36,30 @@ declare namespace org.openhab.core.items {
     } // end Item
 
     class GenericItem implements Item {
+
+        addGroupName(arg0: string): void;
+        addGroupNames(...arg0: string[]): void;
+        addGroupNames(arg0: java.util.List<string>): void;
+        addTag(arg0: string): void;
+        addTags(...arg0: string[]): void;
+        addTags(arg0: java.util.Collection<string>): void;
+        removeAllTags(): void;
+        removeGroupName(arg0: string): void;
+        setCategory(arg0: string): void;
+        setLabel(arg0: string): void;
+        setState(arg0: org.openhab.core.types.State): void;
+        setUnitProvider(arg0: any /*org.openhab.core.i18n.UnitProvider*/): void;
+        removeTag(arg0: string): void;
+        
         getCategory(): string;
         getGroupNames(): java.util.List<string>;
         getLabel(): string;
         getName(): string;
+        name: string;
+
         getState(): types.State;
-        state: types.State;
+        state: org.openhab.core.types.State;
+
         getStateAs<T>(arg0: T): T;
         getTags(): java.util.Set<string>;
         getType(): string;
@@ -53,14 +73,10 @@ declare namespace org.openhab.core.items {
 
     class GroupItem extends GenericItem /*implements StateChangeListener*/ {
 
-        addGroupName(arg0: string): void;
-        addGroupNames(...arg0: string[]): void;
-        addGroupNames(arg0: java.util.List<string>): void;
+
         addMember(arg0: org.openhab.core.items.Item): void;
         // addStateChangeListener(arg0: StateChangeListener): void;
-        addTag(arg0: string): void;
-        addTags(...arg0: string[]): void;
-        addTags(arg0: java.util.Collection<string>): void;
+
         // dispose(): void;
         // equals(arg0: any /*java.lang.Object*/): boolean;
         // getAcceptedCommandTypes(): java.util.List<java.lang.Class<org.openhab.core.types.Command>>;
@@ -87,22 +103,20 @@ declare namespace org.openhab.core.items {
         // hasTag(arg0: string): boolean;
         // isAcceptedState(arg0: java.util.List<java.lang.Class<org.openhab.core.types.State>>, arg1: org.openhab.core.types.State): boolean;
         removeAllMembers(): void;
-        removeAllTags(): void;
-        removeGroupName(arg0: string): void;
+
         removeMember(arg0: org.openhab.core.items.Item): void;
         // removeStateChangeListener(arg0: StateChangeListener): void;
-        removeTag(arg0: string): void;
+
         replaceMember(arg0: org.openhab.core.items.Item, arg1: org.openhab.core.items.Item): void;
         // send(arg0: org.openhab.core.types.Command): void;
         // send(arg0: org.openhab.core.types.RefreshType): void;
-        setCategory(arg0: string): void;
+
         // setCommandDescriptionService(arg0: any /*org.openhab.core.service.CommandDescriptionService*/): void;
         // setEventPublisher(arg0: any /*org.openhab.core.events.EventPublisher*/): void;
         // setItemStateConverter(arg0: ItemStateConverter): void;
-        setLabel(arg0: string): void;
-        setState(arg0: org.openhab.core.types.State): void;
+
         // setStateDescriptionService(arg0: org.openhab.core.service.StateDescriptionService): void;
-        setUnitProvider(arg0: any /*org.openhab.core.i18n.UnitProvider*/): void;
+
         // stateChanged(arg0: org.openhab.core.items.Item, arg1: org.openhab.core.types.State, arg2: org.openhab.core.types.State): void;
         // stateUpdated(arg0: org.openhab.core.items.Item, arg1: org.openhab.core.types.State): void;
         // toString(): string;

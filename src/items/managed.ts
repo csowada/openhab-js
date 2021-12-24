@@ -46,7 +46,7 @@ const DYNAMIC_ITEM_TAG = "_DYNAMIC_";
  * @param {HostGroupFunction} [groupFunction] the group function used by the Item
  * @param {Map<any, any>} [itemMetadata] a map of metadata to set on the item
  */
-const createItem = function (itemName, itemType, category, groups, label, tags, giBaseType, groupFunction, itemMetadata) {
+export const createItem = function (itemName, itemType, category, groups, label, tags, giBaseType, groupFunction, itemMetadata) {
     itemName = safeItemName(itemName);
 
     let baseItem;
@@ -107,7 +107,7 @@ const createItem = function (itemName, itemType, category, groups, label, tags, 
  * @param {HostItem} [giBaseType] the group Item base type for the Item
  * @param {HostGroupFunction} [groupFunction] the group function used by the Item
  */
-const addItem = function (itemName, itemType, category, groups, label, tags, giBaseType, groupFunction) {
+export const addItem = function (itemName, itemType, category, groups, label, tags, giBaseType, groupFunction) {
     let item = createItem(...arguments);
     managedItemProvider.add(item.rawItem);
     log.debug("Item added: {}", item.name);
@@ -121,7 +121,7 @@ const addItem = function (itemName, itemType, category, groups, label, tags, giB
  * @param {String|HostItem} itemOrItemName the item to remove
  * @returns {Boolean} true iff the item is actually removed
  */
-const removeItem = function (itemOrItemName) {
+export const removeItem = function (itemOrItemName) {
 
     var itemName;
 
@@ -169,7 +169,7 @@ const removeItem = function (itemOrItemName) {
  * @param {HostItem} [giBaseType] the group Item base type for the Item
  * @param {HostGroupFunction} [groupFunction] the group function used by the Item
  */
-const replaceItem = function (/* same args as addItem */) {
+export const replaceItem = function (/* same args as addItem */) {
     var itemName = arguments[0];
     try {
         var item = getItem(itemName);
@@ -195,7 +195,7 @@ const replaceItem = function (/* same args as addItem */) {
  * @param {Boolean} nullIfMissing whether to return null if the item cannot be found (default is to throw an exception)
  * @return {Item} the item
  */
-const getItem = (name, nullIfMissing = false) => {
+export const getItem = (name, nullIfMissing = false) => {
     try {
         if (typeof name === 'string' || name instanceof String) {
             return new Item(itemRegistry.getItem(name));
@@ -216,7 +216,7 @@ const getItem = (name, nullIfMissing = false) => {
  * @param {String[]} tagNames an array of tags to match against
  * @return {Item[]} the items with a tag that is included in the passed tags
  */
-const getItemsByTag = (...tagNames) => {
+export const getItemsByTag = (...tagNames) => {
     return utils.javaSetToJsArray(itemRegistry.getItemsByTag(tagNames)).map(i => new Item(i));
 }
 
@@ -230,30 +230,20 @@ const safeItemName = s => s.
     replace(/[\"\']/g, ''). //delete
     replace(/[^a-zA-Z0-9]/g, '_'); //replace with underscore
 
-module.exports = {
-    safeItemName,
-    getItem,
-    addItem,
-    getItemsByTag,
-    replaceItem,
-    createItem,
-    removeItem,
-    // Item,
-    /**
-     * Custom indexer, to allow static item lookup.
-     * @example
-     * let { my_object_name } = require('openhab').items.objects;
-     * ...
-     * let my_state = my_object_name.state; //my_object_name is an Item
-     * 
-     * @returns {Object} a collection of items allowing indexing by item name
-     */
-    objects: () => new Proxy({}, {
-        get: function (target, name) {
-            if (typeof name === 'string' && /^-?\d+$/.test(name))
-                return getItem(name);
+/**
+* Custom indexer, to allow static item lookup.
+* @example
+* let { my_object_name } = require('openhab').items.objects;
+* ...
+* let my_state = my_object_name.state; //my_object_name is an Item
+* 
+* @returns {Object} a collection of items allowing indexing by item name
+*/
+export const objects = () => new Proxy({}, {
+    get: function (target, name) {
+        if (typeof name === 'string' && /^-?\d+$/.test(name))
+            return getItem(name);
 
-            throw Error("unsupported function call: " + name);
-        }
-    })
-}
+        throw Error("unsupported function call: " + name.toString());
+    }
+})

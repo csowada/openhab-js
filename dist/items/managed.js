@@ -1,3 +1,4 @@
+"use strict";
 /**
  * @typedef { import("../global").HostItem } HostItem
  * @typedef { import("../global").HostGroupFunction } HostGroupFunction
@@ -5,19 +6,22 @@
  * @typedef { import("./item") } Item
  *
 */
-var osgi = require('../osgi');
-var utils = require('../utils');
-var log = require('../log')('items');
-var itemRegistry = require('@runtime').itemRegistry;
-var itemBuilderFactory = osgi.getService("org.openhab.core.items.ItemBuilderFactory");
-var managedItemProvider = osgi.getService("org.openhab.core.items.ManagedItemProvider");
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.objects = exports.getItemsByTag = exports.getItem = exports.replaceItem = exports.removeItem = exports.addItem = exports.createItem = void 0;
+const item_1 = require("./item");
+const osgi = require('../osgi');
+const utils = require('../utils');
+const log = require('../log')('items');
+const { itemRegistry } = require('@runtime');
+const itemBuilderFactory = osgi.getService("org.openhab.core.items.ItemBuilderFactory");
+const managedItemProvider = osgi.getService("org.openhab.core.items.ManagedItemProvider");
 /**
  * @namespace items
  */
 /**
  * Tag value to be attached to all dynamically created items.
  */
-var DYNAMIC_ITEM_TAG = "_DYNAMIC_";
+const DYNAMIC_ITEM_TAG = "_DYNAMIC_";
 /**
  * Creates a new item within OpenHab. This item is not registered with any provider.
  *
@@ -35,9 +39,9 @@ var DYNAMIC_ITEM_TAG = "_DYNAMIC_";
  * @param {HostGroupFunction} [groupFunction] the group function used by the Item
  * @param {Map<any, any>} [itemMetadata] a map of metadata to set on the item
  */
-var createItem = function (itemName, itemType, category, groups, label, tags, giBaseType, groupFunction, itemMetadata) {
+const createItem = function (itemName, itemType, category, groups, label, tags, giBaseType, groupFunction, itemMetadata) {
     itemName = safeItemName(itemName);
-    var baseItem;
+    let baseItem;
     if (itemType === 'Group' && typeof giBaseType !== 'undefined') {
         baseItem = itemBuilderFactory.newItemBuilder(giBaseType, itemName + "_baseItem").build();
     }
@@ -63,13 +67,14 @@ var createItem = function (itemName, itemType, category, groups, label, tags, gi
             builder = builder.withGroupFunction(groupFunction);
         }
         var item = builder.build();
-        return new Item(item);
+        return new item_1.Item(item);
     }
     catch (e) {
         log.error("Failed to create item: " + e);
         throw e;
     }
 };
+exports.createItem = createItem;
 /**
  * Creates a new item within OpenHab. This item will persist regardless of the lifecycle of the script creating it.
  *
@@ -86,12 +91,13 @@ var createItem = function (itemName, itemType, category, groups, label, tags, gi
  * @param {HostItem} [giBaseType] the group Item base type for the Item
  * @param {HostGroupFunction} [groupFunction] the group function used by the Item
  */
-var addItem = function (itemName, itemType, category, groups, label, tags, giBaseType, groupFunction) {
-    var item = createItem.apply(void 0, arguments);
+const addItem = function (itemName, itemType, category, groups, label, tags, giBaseType, groupFunction) {
+    let item = (0, exports.createItem)(...arguments);
     managedItemProvider.add(item.rawItem);
     log.debug("Item added: {}", item.name);
     return item;
 };
+exports.addItem = addItem;
 /**
  * Removes an item from OpenHab. The item is removed immediately and cannot be recoved.
  *
@@ -99,7 +105,7 @@ var addItem = function (itemName, itemType, category, groups, label, tags, giBas
  * @param {String|HostItem} itemOrItemName the item to remove
  * @returns {Boolean} true iff the item is actually removed
  */
-var removeItem = function (itemOrItemName) {
+const removeItem = function (itemOrItemName) {
     var itemName;
     if (typeof itemOrItemName === 'string') {
         itemName = itemOrItemName;
@@ -111,7 +117,7 @@ var removeItem = function (itemOrItemName) {
         log.warn('Item not registered (or supplied name is not a string) so cannot be removed');
         return false;
     }
-    if (typeof getItem(itemName) === 'undefined') {
+    if (typeof (0, exports.getItem)(itemName) === 'undefined') {
         log.warn('Item not registered so cannot be removed');
         return false;
     }
@@ -125,6 +131,7 @@ var removeItem = function (itemOrItemName) {
         return false;
     }
 };
+exports.removeItem = removeItem;
 /**
  * Replaces (upserts) an item. If an item exists with the same name, it will be removed and a new item with
  * the supplied parameters will be created in it's place. If an item does not exist with this name, a new
@@ -144,13 +151,13 @@ var removeItem = function (itemOrItemName) {
  * @param {HostItem} [giBaseType] the group Item base type for the Item
  * @param {HostGroupFunction} [groupFunction] the group function used by the Item
  */
-var replaceItem = function ( /* same args as addItem */) {
+const replaceItem = function ( /* same args as addItem */) {
     var itemName = arguments[0];
     try {
-        var item = getItem(itemName);
+        var item = (0, exports.getItem)(itemName);
         if (typeof item !== 'undefined') {
             log.debug("Removing existing item " + itemName + "[" + item + "] to replace with updated one");
-            removeItem(itemName);
+            (0, exports.removeItem)(itemName);
         }
     }
     catch (e) {
@@ -161,8 +168,9 @@ var replaceItem = function ( /* same args as addItem */) {
             throw e;
         }
     }
-    return addItem.apply(this, arguments);
+    return exports.addItem.apply(this, arguments);
 };
+exports.replaceItem = replaceItem;
 /**
  * Gets an openHAB Item.
  * @memberOf items
@@ -170,11 +178,10 @@ var replaceItem = function ( /* same args as addItem */) {
  * @param {Boolean} nullIfMissing whether to return null if the item cannot be found (default is to throw an exception)
  * @return {Item} the item
  */
-var getItem = function (name, nullIfMissing) {
-    if (nullIfMissing === void 0) { nullIfMissing = false; }
+const getItem = (name, nullIfMissing = false) => {
     try {
         if (typeof name === 'string' || name instanceof String) {
-            return new Item(itemRegistry.getItem(name));
+            return new item_1.Item(itemRegistry.getItem(name));
         }
     }
     catch (e) {
@@ -186,6 +193,7 @@ var getItem = function (name, nullIfMissing) {
         }
     }
 };
+exports.getItem = getItem;
 /**
  * Gets all openHAB Items with a specific tag.
  *
@@ -193,45 +201,33 @@ var getItem = function (name, nullIfMissing) {
  * @param {String[]} tagNames an array of tags to match against
  * @return {Item[]} the items with a tag that is included in the passed tags
  */
-var getItemsByTag = function () {
-    var tagNames = [];
-    for (var _i = 0; _i < arguments.length; _i++) {
-        tagNames[_i] = arguments[_i];
-    }
-    return utils.javaSetToJsArray(itemRegistry.getItemsByTag(tagNames)).map(function (i) { return new Item(i); });
+const getItemsByTag = (...tagNames) => {
+    return utils.javaSetToJsArray(itemRegistry.getItemsByTag(tagNames)).map(i => new item_1.Item(i));
 };
+exports.getItemsByTag = getItemsByTag;
 /**
  * Helper function to ensure an item name is valid. All invalid characters are replaced with an underscore.
  * @memberOf items
  * @param {String} s the name to make value
  * @returns {String} a valid item name
  */
-var safeItemName = function (s) { return s.
+const safeItemName = s => s.
     replace(/[\"\']/g, ''). //delete
-    replace(/[^a-zA-Z0-9]/g, '_'); }; //replace with underscore
-module.exports = {
-    safeItemName: safeItemName,
-    getItem: getItem,
-    addItem: addItem,
-    getItemsByTag: getItemsByTag,
-    replaceItem: replaceItem,
-    createItem: createItem,
-    removeItem: removeItem,
-    // Item,
-    /**
-     * Custom indexer, to allow static item lookup.
-     * @example
-     * let { my_object_name } = require('openhab').items.objects;
-     * ...
-     * let my_state = my_object_name.state; //my_object_name is an Item
-     *
-     * @returns {Object} a collection of items allowing indexing by item name
-     */
-    objects: function () { return new Proxy({}, {
-        get: function (target, name) {
-            if (typeof name === 'string' && /^-?\d+$/.test(name))
-                return getItem(name);
-            throw Error("unsupported function call: " + name);
-        }
-    }); }
-};
+    replace(/[^a-zA-Z0-9]/g, '_'); //replace with underscore
+/**
+* Custom indexer, to allow static item lookup.
+* @example
+* let { my_object_name } = require('openhab').items.objects;
+* ...
+* let my_state = my_object_name.state; //my_object_name is an Item
+*
+* @returns {Object} a collection of items allowing indexing by item name
+*/
+const objects = () => new Proxy({}, {
+    get: function (target, name) {
+        if (typeof name === 'string' && /^-?\d+$/.test(name))
+            return (0, exports.getItem)(name);
+        throw Error("unsupported function call: " + name.toString());
+    }
+});
+exports.objects = objects;

@@ -7,7 +7,7 @@
  * @namespace triggers
  */
 
-import utils from "./utils";
+import * as utils from "./utils";
 
 const ModuleBuilder: any = Java.type("org.openhab.core.automation.util.ModuleBuilder");
 const Configuration: any = Java.type("org.openhab.core.config.core.Configuration");
@@ -49,7 +49,7 @@ let createTrigger = function (typeString, name, config) {
  * @returns {any | null} trigger
  * 
  */
-const ChannelEventTrigger = (channel, event, triggerName) => createTrigger("core.ChannelEventTrigger", triggerName, {
+export const ChannelEventTrigger = (channel, event, triggerName) => createTrigger("core.ChannelEventTrigger", triggerName, {
     "channelUID": channel,
     "event": event
 });
@@ -67,7 +67,7 @@ const ChannelEventTrigger = (channel, event, triggerName) => createTrigger("core
  * @param {String} [newState] the new state of the item
  * @param {String} [triggerName] the name of the trigger to create
  */
-const ItemStateChangeTrigger = (itemName, oldState, newState, triggerName) => createTrigger("core.ItemStateChangeTrigger", triggerName, {
+export const ItemStateChangeTrigger = (itemName, oldState, newState, triggerName) => createTrigger("core.ItemStateChangeTrigger", triggerName, {
     "itemName": itemName,
     "state": newState,
     "oldState": oldState
@@ -85,7 +85,7 @@ const ItemStateChangeTrigger = (itemName, oldState, newState, triggerName) => cr
  * @param {String} [state] the new state of the item
  * @param {String} [triggerName] the name of the trigger to create
  */
-const ItemStateUpdateTrigger = (itemName, state, triggerName) => createTrigger("core.ItemStateUpdateTrigger", triggerName, {
+export const ItemStateUpdateTrigger = (itemName, state, triggerName) => createTrigger("core.ItemStateUpdateTrigger", triggerName, {
     "itemName": itemName,
     "state": state
 })
@@ -102,7 +102,7 @@ const ItemStateUpdateTrigger = (itemName, state, triggerName) => createTrigger("
  * @param {String} [command] the command received
  * @param {String} [triggerName] the name of the trigger to create
  */
-const ItemCommandTrigger = (itemName, command, triggerName) => createTrigger("core.ItemCommandTrigger", triggerName, {
+export const ItemCommandTrigger = (itemName, command, triggerName) => createTrigger("core.ItemCommandTrigger", triggerName, {
     "itemName": itemName,
     "command": command
 })
@@ -120,7 +120,7 @@ const ItemCommandTrigger = (itemName, command, triggerName) => createTrigger("co
  * @param {String} [newState] the new state of the group
  * @param {String} [triggerName] the name of the trigger to create
  */
-const GroupStateChangeTrigger = (groupName, oldState, newState, triggerName) => createTrigger("core.GroupStateChangeTrigger", triggerName, {
+export const GroupStateChangeTrigger = (groupName, oldState, newState, triggerName) => createTrigger("core.GroupStateChangeTrigger", triggerName, {
     "groupName": groupName,
     "state": newState,
     "oldState": oldState
@@ -138,7 +138,7 @@ const GroupStateChangeTrigger = (groupName, oldState, newState, triggerName) => 
  * @param {String} [state] the new state of the group
  * @param {String} [triggerName] the name of the trigger to create
  */
-const GroupStateUpdateTrigger = (groupName, state, triggerName) => createTrigger("core.GroupStateUpdateTrigger", triggerName, {
+export const GroupStateUpdateTrigger = (groupName, state, triggerName) => createTrigger("core.GroupStateUpdateTrigger", triggerName, {
     "groupName": groupName,
     "state": state
 })
@@ -155,7 +155,7 @@ const GroupStateUpdateTrigger = (groupName, state, triggerName) => createTrigger
  * @param {String} [command] the command received
  * @param {String} [triggerName] the name of the trigger to create
  */
-const GroupCommandTrigger = (groupName, command, triggerName) => createTrigger("core.GroupCommandTrigger", triggerName, {
+export const GroupCommandTrigger = (groupName, command, triggerName) => createTrigger("core.GroupCommandTrigger", triggerName, {
     "groupName": groupName,
     "command": command
 })
@@ -172,7 +172,7 @@ const GroupCommandTrigger = (groupName, command, triggerName) => createTrigger("
  * @param {String} [status] the optional status to monitor for
  * @param {String} [triggerName] the name of the trigger to create
  */
-const ThingStatusUpdateTrigger = (thingUID, status, triggerName) => createTrigger("core.ThingStatusUpdateTrigger", triggerName, {
+export const ThingStatusUpdateTrigger = (thingUID, status, triggerName) => createTrigger("core.ThingStatusUpdateTrigger", triggerName, {
     "thingUID": thingUID,
     "status": status,
 })
@@ -190,7 +190,7 @@ const ThingStatusUpdateTrigger = (thingUID, status, triggerName) => createTrigge
 * @param {String} [previousStatus] the optional previous state to monitor from
 * @param {String} [triggerName] the optional name of the trigger to create
 */
-const ThingStatusChangeTrigger = (thingUID, status, previousStatus, triggerName) => createTrigger("core.ThingStatusChangeTrigger", triggerName, {
+export const ThingStatusChangeTrigger = (thingUID, status, previousStatus, triggerName) => createTrigger("core.ThingStatusChangeTrigger", triggerName, {
     "thingUID": thingUID,
     "status": status,
     "previousStatus": previousStatus,
@@ -215,7 +215,7 @@ const ThingStatusChangeTrigger = (thingUID, status, previousStatus, triggerName)
  * @param {String} startlevel the system start level to be triggered on
  * @param {String} [triggerName] the name of the trigger to create
  */
-const SystemStartlevelTrigger = (startlevel, triggerName) => createTrigger("core.SystemStartlevelTrigger", triggerName, {
+export const SystemStartlevelTrigger = (startlevel, triggerName) => createTrigger("core.SystemStartlevelTrigger", triggerName, {
     "startlevel": startlevel
 })
 
@@ -229,7 +229,7 @@ const SystemStartlevelTrigger = (startlevel, triggerName) => createTrigger("core
  * @memberof triggers
  * @param {String} expression the cron expression defining the triggering schedule
  */
-const GenericCronTrigger = (expression, triggerName) => createTrigger("timer.GenericCronTrigger", triggerName, {
+export const GenericCronTrigger = (expression, triggerName) => createTrigger("timer.GenericCronTrigger", triggerName, {
     "cronExpression": expression
 })
 
@@ -243,35 +243,20 @@ const GenericCronTrigger = (expression, triggerName) => createTrigger("timer.Gen
  * @memberof triggers
  * @param {String} time the time expression defining the triggering schedule
  */
-const TimeOfDayTrigger = (time, triggerName) => createTrigger("timer.TimeOfDayTrigger", triggerName, {
+export const TimeOfDayTrigger = (time, triggerName) => createTrigger("timer.TimeOfDayTrigger", triggerName, {
     "time": time
 })
 
 /* not yet tested
-const ItemStateCondition = (itemName, state, triggerName) => createTrigger("core.ItemStateCondition", triggerName, {
+export const ItemStateCondition = (itemName, state, triggerName) => createTrigger("core.ItemStateCondition", triggerName, {
     "itemName": itemName,
     "operator": "=",
     "state": state
 }),
  
-const GenericCompareCondition = (itemName, state, operator, triggerName) => createTrigger("core.GenericCompareCondition", triggerName, {
+export const GenericCompareCondition = (itemName, state, operator, triggerName) => createTrigger("core.GenericCompareCondition", triggerName, {
         "itemName": itemName,
         "operator": operator,// matches, ==, <, >, =<, =>
         "state": state
 })
 */
-
-export = {
-    ChannelEventTrigger,
-    GenericCronTrigger,
-    GroupCommandTrigger,
-    GroupStateChangeTrigger,
-    GroupStateUpdateTrigger,
-    ItemCommandTrigger,
-    ItemStateChangeTrigger,
-    ItemStateUpdateTrigger,
-    SystemStartlevelTrigger,
-    ThingStatusChangeTrigger,
-    ThingStatusUpdateTrigger,
-    TimeOfDayTrigger
-}

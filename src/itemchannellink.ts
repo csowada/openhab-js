@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * Items' metadata namespace.
  * This namespace provides access to metadata on items.
@@ -8,15 +6,12 @@
  * @namespace metadata
  */
 
-const log = require('./log')('itemchannellink');
+import logger from "./log";
+const log = logger('itemchannellink');
 
-let ItemChannelLink = Java.type("org.openhab.core.thing.link.ItemChannelLink");
+const ItemChannelLink: any = Java.type("org.openhab.core.thing.link.ItemChannelLink");
 
-let createItemChannelLink = function(itemName, channel) {
+export const createItemChannelLink = function(itemName: string, channel: any) {
     log.debug("Creating item channel link {} -> {}", itemName, channel.uid);
     return new ItemChannelLink(itemName, channel.rawChannel.getUID());
 }
-
-module.exports = {
-    createItemChannelLink
-};

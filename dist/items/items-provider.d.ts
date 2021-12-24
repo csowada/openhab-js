@@ -1,29 +1,31 @@
-export class StaticItemProvider extends AbstractProvider {
-    items: any;
+import { Item } from "openhab/src/items/item";
+import { AbstractProvider } from "../provider";
+export declare class StaticItemProvider extends AbstractProvider {
+    items: Set<org.openhab.core.items.Item>;
+    constructor(items: any);
     addProviderChangeListener(listener: any): void;
     removeProviderChangeListener(listener: any): void;
-    getAll(): any;
+    getAll(): Set<org.openhab.core.items.Item>;
 }
-export class ManagedItemProvider extends AbstractProvider {
-    constructor();
-    items: Set<any>;
+export declare class ManagedItemProvider extends AbstractProvider {
     listeners: Set<any>;
+    items: Set<org.openhab.core.items.Item>;
+    constructor();
     addProviderChangeListener(listener: any): void;
     removeProviderChangeListener(listener: any): void;
-    add(item: any): void;
-    remove(itemOrName: any): void;
+    add(item: Item): void;
+    remove(itemOrName: string | Item): void;
     update(item: any): void;
     getAll(): any;
 }
-export class StaticCallbackItemProvider extends AbstractProvider {
-    constructor();
+export declare class StaticCallbackItemProvider extends AbstractProvider {
     itemsCallbacks: any[];
+    constructor();
     addProviderChangeListener(listener: any): void;
     removeProviderChangeListener(listener: any): void;
     addItemsCallback(callback: any): void;
     getAll(): any;
 }
-import { AbstractProvider } from "openhab/provider";
-export declare function staticItemProvider(items: any): StaticItemProvider;
-export declare function managedItemProvider(): ManagedItemProvider;
-export declare function staticCallbackItemProvider(): StaticCallbackItemProvider;
+export declare const staticItemProvider: (items: any) => StaticItemProvider;
+export declare const managedItemProvider: () => ManagedItemProvider;
+export declare const staticCallbackItemProvider: () => StaticCallbackItemProvider;

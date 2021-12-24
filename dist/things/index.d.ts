@@ -1,11 +1,51 @@
 /**
  *
+ */
+declare class OHThing {
+    rawThing: any;
+    constructor(rawThing: any);
+}
+/**
+ *
+ */
+declare class OHChannel {
+    rawChannel: any;
+    constructor(rawChannel: any);
+    get uid(): any;
+}
+/**
+ *
+ */
+declare class ThingBuilder {
+    thingTypeUID: any;
+    thingId: any;
+    thingUID: any;
+    rawBuilder: any;
+    constructor(thingTypeUID: any, thingId: any, bridgeUID: any);
+    withChannel(channel: OHChannel): this;
+    withLabel(label: string): this;
+    build(): OHThing;
+}
+/**
+ *
+ */
+declare class ChannelBuilder {
+    rawBuilder: any;
+    constructor(thingUID: any, channelId: any, acceptedItemType: any);
+    withConfiguration(config: any): this;
+    withKind(stateOrTrigger: any): this;
+    withLabel(label: string): this;
+    withType(channelType: any): this;
+    build(): OHChannel;
+}
+/**
+ *
  * @param {String} thingTypeUID
  * @param {String} id
  * @param {String} bridgeUID
  * @returns
  */
-export function newThingBuilder(thingTypeUID: string, id: string, bridgeUID: string): ThingBuilder;
+export declare const newThingBuilder: (thingTypeUID: any, id: any, bridgeUID: any) => ThingBuilder;
 /**
  *
  * @param {String} thingUID
@@ -13,45 +53,5 @@ export function newThingBuilder(thingTypeUID: string, id: string, bridgeUID: str
  * @param {String} acceptedItemType
  * @returns
  */
-export function newChannelBuilder(thingUID: string, channelId: string, acceptedItemType: string): ChannelBuilder;
-/**
- *
- */
-export class ThingBuilder {
-    constructor(thingTypeUID: any, thingId: any, bridgeUID: any);
-    thingTypeUID: any;
-    thingId: any;
-    thingUID: any;
-    rawBuilder: any;
-    withChannel(channel: any): ThingBuilder;
-    withLabel(label: any): ThingBuilder;
-    build(): OHThing;
-}
-/**
- *
- */
-export class ChannelBuilder {
-    constructor(thingUID: any, channelId: any, acceptedItemType: any);
-    rawBuilder: any;
-    withConfiguration(config: any): ChannelBuilder;
-    withKind(stateOrTrigger: any): ChannelBuilder;
-    withLabel(label: any): ChannelBuilder;
-    withType(channelType: any): ChannelBuilder;
-    build(): OHChannel;
-}
-/**
- *
- */
-declare class OHThing {
-    constructor(rawThing: any);
-    rawThing: any;
-}
-/**
- *
- */
-declare class OHChannel {
-    constructor(rawChannel: any);
-    rawChannel: any;
-    get uid(): any;
-}
+export declare const newChannelBuilder: (thingUID: any, channelId: any, acceptedItemType: any) => ChannelBuilder;
 export {};

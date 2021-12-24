@@ -1,73 +1,69 @@
 "use strict";
-var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
-    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
-        if (ar || !(i in from)) {
-            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
-            ar[i] = from[i];
-        }
-    }
-    return to.concat(ar || Array.prototype.slice.call(from));
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-var log_1 = __importDefault(require("./log"));
-var log = (0, log_1["default"])("utils");
-var HashSet = Java.type("java.util.HashSet");
-var ArrayList = Java.type("java.util.ArrayList");
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.isJsInstanceOfJava = exports.dumpObject = exports.randomUUID = exports.javaSetToJsSet = exports.javaSetToJsArray = exports.jsArrayToJavaList = exports.jsArrayToJavaSet = exports.jsSetToJavaSet = void 0;
+const log_1 = __importDefault(require("./log"));
+const log = (0, log_1.default)("utils");
+const HashSet = Java.type("java.util.HashSet");
+const ArrayList = Java.type("java.util.ArrayList");
 function getAllPropertyNames(obj) {
-    var proto = Object.getPrototypeOf(obj);
-    var inherited = (proto) ? getAllPropertyNames(proto) : [];
-    var propSet = new Set(Object.getOwnPropertyNames(obj).concat(inherited));
-    return __spreadArray([], propSet.values(), true);
+    const proto = Object.getPrototypeOf(obj);
+    const inherited = (proto) ? getAllPropertyNames(proto) : [];
+    return [...new Set(Object.getOwnPropertyNames(obj).concat(inherited))];
 }
-var jsSetToJavaSet = function (set) {
-    var rv = new HashSet();
-    set.forEach(function (e) { return rv.add(e); });
+let jsSetToJavaSet = function (set) {
+    let rv = new HashSet();
+    set.forEach(e => rv.add(e));
     return rv;
 };
-var jsArrayToJavaSet = function (arr) {
-    var set = new HashSet();
-    for (var _i = 0, arr_1 = arr; _i < arr_1.length; _i++) {
-        var i = arr_1[_i];
+exports.jsSetToJavaSet = jsSetToJavaSet;
+let jsArrayToJavaSet = function (arr) {
+    let set = new HashSet();
+    for (let i of arr) {
         set.add(i);
     }
     return set;
 };
-var jsArrayToJavaList = function (arr) {
-    var list = new ArrayList();
-    for (var _i = 0, arr_2 = arr; _i < arr_2.length; _i++) {
-        var i = arr_2[_i];
+exports.jsArrayToJavaSet = jsArrayToJavaSet;
+let jsArrayToJavaList = function (arr) {
+    let list = new ArrayList();
+    for (let i of arr) {
         list.add(i);
     }
     return list;
 };
-var javaSetToJsArray = function (set) {
+exports.jsArrayToJavaList = jsArrayToJavaList;
+let javaSetToJsArray = function (set) {
     return Java.from(new ArrayList(set));
 };
-var javaSetToJsSet = function (set) {
+exports.javaSetToJsArray = javaSetToJsArray;
+let javaSetToJsSet = function (set) {
     return new Set(exports.javaSetToJsArray(set));
 };
-var randomUUID = function () { return Java.type("java.util.UUID").randomUUID(); };
-var dumpObject = function (obj) {
+exports.javaSetToJsSet = javaSetToJsSet;
+let randomUUID = () => Java.type("java.util.UUID").randomUUID();
+exports.randomUUID = randomUUID;
+let dumpObject = function (obj) {
     try {
         log.info("Dumping object...");
         log.info("  typeof obj = {}", (typeof obj));
-        var isJavaObject = Java.isJavaObject(obj);
+        let isJavaObject = Java.isJavaObject(obj);
         log.info("  Java.isJavaObject(obj) = {}", isJavaObject);
-        var isJavaType = Java.isType(obj);
+        let isJavaType = Java.isType(obj);
         log.info("  Java.isType(obj) = {}", isJavaType);
         if (isJavaObject) {
             if (isJavaType) {
                 log.info("  Java.typeName(obj) = {}", Java.typeName(obj));
             }
             else {
-                log.info("  Java.typeName(obj.class) = {}", Java.typeName(obj["class"]));
-                if (Java.typeName(obj["class"]) == 'java.util.HashMap') {
+                log.info("  Java.typeName(obj.class) = {}", Java.typeName(obj.class));
+                if (Java.typeName(obj.class) == 'java.util.HashMap') {
                     log.info("Dumping contents...");
-                    var keys = obj.keySet().toArray();
+                    let keys = obj.keySet().toArray();
                     for (var key in keys) {
-                        log.info("".concat(keys[key], "(").concat(typeof keys[key], ") = ").concat(obj.get(keys[key]), "(").concat(typeof obj.get(keys[key]), ")"));
+                        log.info(`${keys[key]}(${typeof keys[key]}) = ${obj.get(keys[key])}(${typeof obj.get(keys[key])})`);
                         if (typeof keys[key] === 'object') {
                             log.info("Dumping key...");
                             exports.dumpObject(keys[key]);
@@ -87,22 +83,14 @@ var dumpObject = function (obj) {
         log.info("Failed to dump object: " + e.message);
     }
 };
-var isJsInstanceOfJava = function (instance, type) {
+exports.dumpObject = dumpObject;
+let isJsInstanceOfJava = function (instance, type) {
     if (!Java.isType(type)) {
         throw Error("type is not a java class");
     }
-    if (instance === null || instance === undefined || instance["class"] === null || instance["class"] === undefined) {
+    if (instance === null || instance === undefined || instance.class === null || instance.class === undefined) {
         return false;
     }
-    return type["class"].isAssignableFrom(instance["class"]);
+    return type.class.isAssignableFrom(instance.class);
 };
-module.exports = {
-    jsSetToJavaSet: jsSetToJavaSet,
-    jsArrayToJavaSet: jsArrayToJavaSet,
-    jsArrayToJavaList: jsArrayToJavaList,
-    javaSetToJsArray: javaSetToJsArray,
-    javaSetToJsSet: javaSetToJsSet,
-    randomUUID: randomUUID,
-    dumpObject: dumpObject,
-    isJsInstanceOfJava: isJsInstanceOfJava
-};
+exports.isJsInstanceOfJava = isJsInstanceOfJava;

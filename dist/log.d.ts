@@ -1,8 +1,3 @@
-declare function _exports(_name: any): Logger;
-declare namespace _exports {
-    export { Logger };
-}
-export = _exports;
 /**
  * Logger class. A named logger providing the ability to log formatted messages.
  *
@@ -10,16 +5,17 @@ export = _exports;
  * @hideconstructor
  */
 declare class Logger {
+    appenderProvider: any;
+    _name: string;
+    _logger: any;
+    _listener: any;
     /**
      * Creates a new logger. Don't use directly, use {@link log} on module.
      *
      * @param {String} _name the name of the logger. Will be prefixed by {@link LOGGER_PREFIX}
      * @param {*} _listener a callback to receive logging calls. Can be used to send calls elsewhere, such as escalate errors.
      */
-    constructor(_name: string, appenderProvider: any);
-    _name: any;
-    appenderProvider: any;
-    _logger: any;
+    constructor(_name: string, appenderProvider?: any);
     /**
      * Method to determine caller. Don't use directly.
      *
@@ -28,7 +24,7 @@ declare class Logger {
      * @param {Number} ignoreStackDepth the number of stack frames which to ignore in calculating caller
      * @returns {Error} message as an error object, with fileName, caller and optional lineNumber properties
      */
-    private _getCallerDetails;
+    _getCallerDetails(msg: any, ignoreStackDepth: any): any;
     /**
      * Method to format a log message. Don't use directly.
      *
@@ -39,32 +35,32 @@ declare class Logger {
      * @param {String} [prefix=log] the prefix type, such as none, level, short or log.
      * @returns {Error} message with 'message' String property
      */
-    private _formatLogMessage;
+    _formatLogMessage(msg: any, levelString: string, ignoreStackDepth: number, prefix?: string): any;
     /**
      * Logs at ERROR level.
      * @see atLevel
      */
-    error(...args: any[]): void;
+    error(msg: string | Error, ...args: any[]): void;
     /**
      * Logs at ERROR level.
      * @see atLevel
      */
-    warn(...args: any[]): void;
+    warn(msg: string | Error, ...args: any[]): void;
     /**
      * Logs at INFO level.
      * @see atLevel
      */
-    info(...args: any[]): void;
+    info(msg: string | Error, ...args: any[]): void;
     /**
      * Logs at DEBUG level.
      * @see atLevel
      */
-    debug(...args: any[]): void;
+    debug(msg: string | Error, ...args: any[]): void;
     /**
      * Logs at TRACE level.
      * @see atLevel
      */
-    trace(...args: any[]): void;
+    trace(msg: string | Error, ...args: any[]): void;
     /**
      * Logs a message at the supplied level. The message may include placeholders {} which
      * will be substituted into the message string only if the message is actually logged.
@@ -77,17 +73,25 @@ declare class Logger {
      * @param {String|Error} msg the message to log, possibly with object placeholders
      * @param {Object[]} [objects] the objects to substitute into the log message
      */
-    atLevel(level: string, msg: string | Error, ...objects?: any[]): void;
-    maybeLogWithThrowable(level: any, msg: any, objects: any): boolean;
-    writeLogLine(level: any, message: any, objects?: any[]): void;
+    atLevel(level: string, msg: string | Error, ...objects: any[]): void;
+    maybeLogWithThrowable(level: string, msg: string | Error, objects: any): boolean;
+    writeLogLine(level: string, message: string | Error, objects?: any[]): void;
     /**
      * The listener function attached to this logger.
-     * @return {*} the listener function
      */
     get listener(): any;
     /**
      * The name of this logger
-     * @return {String} the logger name
      */
     get name(): string;
 }
+/**
+ * Creates a logger.
+ * @see Logger
+ * @name default
+ * @param {string} name the name of the logger
+ * @param {*} [_listener] an optional listener to process log events.
+ * @memberof log
+ */
+export default function (_name: any): Logger;
+export { Logger };

@@ -1,5 +1,5 @@
 import { AbstractProvider } from "../provider";
-import utils from "../utils";
+import * as utils from "../utils";
 
 const METADATA_PROVIDER_CLASS = "org.openhab.core.items.MetadataProvider";
 

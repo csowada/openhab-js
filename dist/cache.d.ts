@@ -1,4 +1,10 @@
 /**
+ * Shared cache namespace.
+ * This namespace provides a default cache that can be use to set and retrieve objects that will be persisted between reloads of scripts.
+ *
+ * @namespace cache
+ */
+/**
  * Returns the value to which the specified key is mapped
  *
  * @example <caption>Get a previously set value with a default value (times = 0)</caption>
@@ -18,7 +24,7 @@
  * @param {function} [defaultSupplier] if the specified key is not already associated with a value, this function will return a default value
  * @returns {(*|null)} the current object for the supplied key, a default value if defaultSupplier is provided, or null
  */
-export function get(key: string, defaultSupplier?: Function): (any | null);
+export declare const get: (key: any, defaultSupplier: any) => any;
 /**
  * Associates the specified value with the specified key
  *
@@ -27,7 +33,7 @@ export function get(key: string, defaultSupplier?: Function): (any | null);
  * @param {*} value value to be associated with the specified key
  * @returns {(*|null)} the previous value associated with null, or null if there was no mapping for key
  */
-export function put(key: string, value: any): (any | null);
+export declare const put: (key: any, value: any) => any;
 /**
  * Removes the mapping for a key from this map if it is present
  *
@@ -35,4 +41,4 @@ export function put(key: string, value: any): (any | null);
  * @param {string} key key whose mapping is to be removed from the map
  * @returns {(*|null)} the previous value associated with key or null if there was no mapping for key
  */
-export function remove(key: string): (any | null);
+export declare const remove: (key: any) => any;

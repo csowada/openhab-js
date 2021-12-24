@@ -1,3 +1,4 @@
+"use strict";
 /**
  * Actions namespace.
  * This namespace provides access to openHAB actions. All available actions can be accessed as direct properties of this
@@ -11,13 +12,37 @@
  * let { actions } = require('openhab');
  *  actions.Pushsafer.pushsafer("<your pushsafer api key>", "<message>", "<message title>", "", "", "", "")
  *
- * @namespace actions
  */
-var osgi = require('./osgi');
-var actions = require('@runtime/Defaults').actions;
-var log = require('./log')('actions');
-var Things = Java.type('org.openhab.core.model.script.actions.Things');
-var actionServices = osgi.findServices("org.openhab.core.model.script.engine.action.ActionService", null) || [];
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.get = exports.thingActions = exports.Voice = exports.ThingsAction = exports.Semantics = exports.ScriptExecution = exports.Ping = exports.LogAction = exports.HTTP = exports.Exec = exports.Ephemeris = exports.BusEvent = exports.Audio = void 0;
+const log_1 = __importDefault(require("./log"));
+const osgi = __importStar(require("./osgi"));
+const Defaults_1 = require("@runtime/Defaults");
+const log = (0, log_1.default)('actions');
+const Things = Java.type('org.openhab.core.model.script.actions.Things');
+const actionServices = osgi.findServices("org.openhab.core.model.script.engine.action.ActionService", null) || [];
 actionServices.forEach(function (item) {
     try {
         //if an action fails to activate, then warn and continue so that other actions are available
@@ -50,7 +75,7 @@ actionServices.forEach(function (item) {
  * @name Audio
  * @memberof actions
  */
-var Audio = Java.type('org.openhab.core.model.script.actions.Audio');
+exports.Audio = Java.type('org.openhab.core.model.script.actions.Audio').class.static;
 /**
  * BusEvent Actions
  *
@@ -70,7 +95,7 @@ var Audio = Java.type('org.openhab.core.model.script.actions.Audio');
  * @name BusEvent
  * @memberof actions
  */
-var BusEvent = Java.type('org.openhab.core.model.script.actions.BusEvent');
+exports.BusEvent = Java.type('org.openhab.core.model.script.actions.BusEvent').class.static;
 /**
  *  Ephemeris Actions
  *
@@ -109,7 +134,7 @@ var BusEvent = Java.type('org.openhab.core.model.script.actions.BusEvent');
  * @name Ephemeris
  * @memberof actions
  */
-var Ephemeris = Java.type('org.openhab.core.model.script.actions.Ephemeris');
+exports.Ephemeris = Java.type('org.openhab.core.model.script.actions.Ephemeris').class.static;
 /**
  *  Exec Actions
  *
@@ -122,7 +147,7 @@ var Ephemeris = Java.type('org.openhab.core.model.script.actions.Ephemeris');
  * @name Exec
  * @memberof actions
  */
-var Exec = Java.type('org.openhab.core.model.script.actions.Exec');
+exports.Exec = Java.type('org.openhab.core.model.script.actions.Exec').class.static;
 /**
  *  HTTP Actions
  *
@@ -149,7 +174,7 @@ var Exec = Java.type('org.openhab.core.model.script.actions.Exec');
  * @name HTTP
  * @memberof actions
  */
-var HTTP = Java.type('org.openhab.core.model.script.actions.HTTP');
+exports.HTTP = Java.type('org.openhab.core.model.script.actions.HTTP').class.static;
 /**
  *  Log Actions
  *
@@ -164,7 +189,7 @@ var HTTP = Java.type('org.openhab.core.model.script.actions.HTTP');
  * @name Log
  * @memberof actions
  */
-var LogAction = Java.type('org.openhab.core.model.script.actions.Log');
+exports.LogAction = Java.type('org.openhab.core.model.script.actions.Log').class.static;
 /**
  *  Ping Actions
  *
@@ -176,7 +201,7 @@ var LogAction = Java.type('org.openhab.core.model.script.actions.Log');
  * @name Ping
  * @memberof actions
  */
-var Ping = Java.type('org.openhab.core.model.script.actions.Ping');
+exports.Ping = Java.type('org.openhab.core.model.script.actions.Ping').class.static;
 /**
  *  ScriptExecution Actions
  *
@@ -190,7 +215,7 @@ var Ping = Java.type('org.openhab.core.model.script.actions.Ping');
  * @name ScriptExecution
  * @memberof actions
  */
-var ScriptExecution = Java.type('org.openhab.core.model.script.actions.ScriptExecution');
+exports.ScriptExecution = Java.type('org.openhab.core.model.script.actions.ScriptExecution').class.static;
 /**
  *  Semantics Actions
  *
@@ -211,7 +236,7 @@ var ScriptExecution = Java.type('org.openhab.core.model.script.actions.ScriptExe
  * @name Semantics
  * @memberof actions
  */
-var Semantics = Java.type('org.openhab.core.model.script.actions.Semantics');
+exports.Semantics = Java.type('org.openhab.core.model.script.actions.Semantics').class.static;
 /**
  *  Things Actions
  *
@@ -224,7 +249,7 @@ var Semantics = Java.type('org.openhab.core.model.script.actions.Semantics');
  * @name Things
  * @memberof actions
  */
-var ThingsAction = Java.type('org.openhab.core.model.script.actions.Things');
+exports.ThingsAction = Java.type('org.openhab.core.model.script.actions.Things').class.static;
 /**
  *  Voice Actions
  *
@@ -244,29 +269,19 @@ var ThingsAction = Java.type('org.openhab.core.model.script.actions.Things');
  * @name Voice
  * @memberof actions
  */
-var Voice = Java.type('org.openhab.core.model.script.actions.Voice');
+exports.Voice = Java.type('org.openhab.core.model.script.actions.Voice').class.static;
 /**
  *
  * @param {String} bindingId
  * @param {String} thingUid
  * @returns
  */
-var thingActions = function (bindingId, thingUid) { return Things.getActions(bindingId, thingUid); };
+const thingActions = (bindingId, thingUid) => Things.getActions(bindingId, thingUid);
+exports.thingActions = thingActions;
 /**
  *
  * @param  {...any} args
  * @returns
  */
-var get = function () {
-    var args = [];
-    for (var _i = 0; _i < arguments.length; _i++) {
-        args[_i] = arguments[_i];
-    }
-    return actions.get.apply(actions, args)[Audio, BusEvent, Ephemeris, Exec, HTTP, LogAction, Ping, ScriptExecution, Semantics, ThingsAction, Voice].forEach(function (item) {
-        module.exports[item["class"].getSimpleName()] = item["class"].static;
-    });
-};
-module.exports = {
-    thingActions: thingActions,
-    get: get
-};
+const get = (...args) => Defaults_1.actions.get(...args);
+exports.get = get;

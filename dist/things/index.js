@@ -1,58 +1,46 @@
-var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
-    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
-        if (ar || !(i in from)) {
-            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
-            ar[i] = from[i];
-        }
-    }
-    return to.concat(ar || Array.prototype.slice.call(from));
-};
-var JavaThingBuilder = Java.type('org.openhab.core.thing.binding.builder.ThingBuilder');
-var ThingTypeUID = Java.type('org.openhab.core.thing.ThingTypeUID');
-var JavaChannelBuilder = Java.type('org.openhab.core.thing.binding.builder.ChannelBuilder');
-var ChannelUID = Java.type('org.openhab.core.thing.ChannelUID');
-var ThingUID = Java.type('org.openhab.core.thing.ThingUID');
-var ChannelKind = Java.type('org.openhab.core.thing.type.ChannelKind');
-var ChannelTypeUID = Java.type('org.openhab.core.thing.type.ChannelTypeUID');
-var Configuration = Java.type('org.openhab.core.config.core.Configuration');
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.newChannelBuilder = exports.newThingBuilder = void 0;
+const JavaThingBuilder = Java.type('org.openhab.core.thing.binding.builder.ThingBuilder');
+const ThingTypeUID = Java.type('org.openhab.core.thing.ThingTypeUID');
+const JavaChannelBuilder = Java.type('org.openhab.core.thing.binding.builder.ChannelBuilder');
+const ChannelUID = Java.type('org.openhab.core.thing.ChannelUID');
+const ThingUID = Java.type('org.openhab.core.thing.ThingUID');
+const ChannelKind = Java.type('org.openhab.core.thing.type.ChannelKind');
+const ChannelTypeUID = Java.type('org.openhab.core.thing.type.ChannelTypeUID');
+const Configuration = Java.type('org.openhab.core.config.core.Configuration');
 /**
  *
  */
-var OHThing = /** @class */ (function () {
-    function OHThing(rawThing) {
+class OHThing {
+    constructor(rawThing) {
         this.rawThing = rawThing;
     }
-    return OHThing;
-}());
+}
 /**
  *
  */
-var OHChannel = /** @class */ (function () {
-    function OHChannel(rawChannel) {
+class OHChannel {
+    constructor(rawChannel) {
         this.rawChannel = rawChannel;
     }
-    Object.defineProperty(OHChannel.prototype, "uid", {
-        get: function () {
-            return this.rawChannel.getUID().toString();
-        },
-        enumerable: false,
-        configurable: true
-    });
-    return OHChannel;
-}());
+    get uid() {
+        return this.rawChannel.getUID().toString();
+    }
+}
 /**
  *
  */
-var ThingBuilder = /** @class */ (function () {
-    function ThingBuilder(thingTypeUID, thingId, bridgeUID) {
+class ThingBuilder {
+    constructor(thingTypeUID, thingId, bridgeUID) {
         if (typeof thingTypeUID === 'string') {
-            thingTypeUID = new (ThingTypeUID.bind.apply(ThingTypeUID, __spreadArray([void 0], thingTypeUID.split(':'), false)))();
+            thingTypeUID = new ThingTypeUID(...thingTypeUID.split(':'));
         }
         this.thingTypeUID = thingTypeUID;
         this.thingId = thingId;
         if (typeof bridgeUID !== 'undefined') {
             if (typeof bridgeUID === 'string') {
-                var _a = bridgeUID.split(':'), bridgeBindingId = _a[0], bridgeThingTypeId = _a[1], bringThingId = _a[2];
+                let [bridgeBindingId, bridgeThingTypeId, bringThingId] = bridgeUID.split(':');
                 bridgeUID = new ThingUID(new ThingTypeUID(bridgeBindingId, bridgeThingTypeId), bringThingId);
             }
             this.thingUID = new ThingUID(thingTypeUID, bridgeUID, thingId);
@@ -64,51 +52,49 @@ var ThingBuilder = /** @class */ (function () {
             this.rawBuilder = JavaThingBuilder.create(thingTypeUID, this.thingUID);
         }
     }
-    ThingBuilder.prototype.withChannel = function (channel) {
+    withChannel(channel) {
         this.rawBuilder.withChannel(channel.rawChannel);
         return this;
-    };
-    ThingBuilder.prototype.withLabel = function (label) {
+    }
+    withLabel(label) {
         this.rawBuilder.withLabel(label);
         return this;
-    };
-    ThingBuilder.prototype.build = function () {
+    }
+    build() {
         return new OHThing(this.rawBuilder.build());
-    };
-    return ThingBuilder;
-}());
+    }
+}
 /**
  *
  */
-var ChannelBuilder = /** @class */ (function () {
-    function ChannelBuilder(thingUID, channelId, acceptedItemType) {
-        var channelUID = new ChannelUID(thingUID, channelId);
+class ChannelBuilder {
+    constructor(thingUID, channelId, acceptedItemType) {
+        let channelUID = new ChannelUID(thingUID, channelId);
         this.rawBuilder = JavaChannelBuilder.create(channelUID, acceptedItemType);
     }
-    ChannelBuilder.prototype.withConfiguration = function (config) {
+    withConfiguration(config) {
         this.rawBuilder.withConfiguration(new Configuration(config));
         return this;
-    };
-    ChannelBuilder.prototype.withKind = function (stateOrTrigger) {
+    }
+    withKind(stateOrTrigger) {
         this.rawBuilder.withKind(ChannelKind.parse(stateOrTrigger));
         return this;
-    };
-    ChannelBuilder.prototype.withLabel = function (label) {
+    }
+    withLabel(label) {
         this.rawBuilder.withLabel(label);
         return this;
-    };
-    ChannelBuilder.prototype.withType = function (channelType) {
+    }
+    withType(channelType) {
         if (typeof channelType === 'string') {
             channelType = new ChannelTypeUID(channelType);
         }
         this.rawBuilder.withType(channelType);
         return this;
-    };
-    ChannelBuilder.prototype.build = function () {
+    }
+    build() {
         return new OHChannel(this.rawBuilder.build());
-    };
-    return ChannelBuilder;
-}());
+    }
+}
 /**
  *
  * @param {String} thingTypeUID
@@ -116,7 +102,8 @@ var ChannelBuilder = /** @class */ (function () {
  * @param {String} bridgeUID
  * @returns
  */
-var newThingBuilder = function (thingTypeUID, id, bridgeUID) { return new ThingBuilder(thingTypeUID, id, bridgeUID); };
+const newThingBuilder = (thingTypeUID, id, bridgeUID) => new ThingBuilder(thingTypeUID, id, bridgeUID);
+exports.newThingBuilder = newThingBuilder;
 /**
  *
  * @param {String} thingUID
@@ -124,10 +111,11 @@ var newThingBuilder = function (thingTypeUID, id, bridgeUID) { return new ThingB
  * @param {String} acceptedItemType
  * @returns
  */
-var newChannelBuilder = function (thingUID, channelId, acceptedItemType) { return new ChannelBuilder(thingUID, channelId, acceptedItemType); };
-module.exports = {
-    newThingBuilder: newThingBuilder,
-    newChannelBuilder: newChannelBuilder
-};
-module.exports.ThingBuilder = ThingBuilder;
-module.exports.ChannelBuilder = ChannelBuilder;
+const newChannelBuilder = (thingUID, channelId, acceptedItemType) => new ChannelBuilder(thingUID, channelId, acceptedItemType);
+exports.newChannelBuilder = newChannelBuilder;
+// module.exports = {
+//     newThingBuilder,
+//     newChannelBuilder
+// }
+// module.exports.ThingBuilder = ThingBuilder;
+// module.exports.ChannelBuilder = ChannelBuilder;

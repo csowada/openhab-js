@@ -1,4 +1,3 @@
-export = ItemHistory;
 /**
  * Class representing the historic state of an openHAB Item
  *
@@ -6,9 +5,9 @@ export = ItemHistory;
  * @memberOf items
  * @hideconstructor
  */
-declare class ItemHistory {
-    constructor(item: any);
-    item: any;
+export declare class ItemHistory {
+    item: org.openhab.core.items.Item;
+    constructor(item: org.openhab.core.items.Item);
     /**
      * Gets the average value of the state of a given Item since a certain point in time.
      *
@@ -20,7 +19,7 @@ declare class ItemHistory {
      * @param {string} [serviceId] optional persistance service ID
      * @returns {(Number | null)}
      */
-    averageSince(timestamp: (Date | ZoneDateTime), serviceId?: string, ...args: any[]): (number | null);
+    averageSince(timestamp: any, serviceId: any): any;
     /**
      * Checks if the state of a given item has changed since a certain point in time.
      *
@@ -28,7 +27,7 @@ declare class ItemHistory {
      * @param {string} [serviceId] optional persistance service ID
      * @returns {boolean}
      */
-    changedSince(timestamp: (Date | ZoneDateTime), serviceId?: string, ...args: any[]): boolean;
+    changedSince(timestamp: any, serviceId: any): any;
     /**
      * Gets the difference value of the state of a given item since a certain point in time.
      *
@@ -36,7 +35,7 @@ declare class ItemHistory {
      * @param {string} [serviceId] optional persistance service ID
      * @returns {(Number | null)}
      */
-    deltaSince(timestamp: (Date | ZoneDateTime), serviceId?: string, ...args: any[]): (number | null);
+    deltaSince(timestamp: any, serviceId: any): any;
     /**
      * Gets the standard deviation of the state of the given Item since a certain point in time.
      *
@@ -44,7 +43,7 @@ declare class ItemHistory {
      * @param {string} [serviceId] optional persistance service ID
      * @returns {(Number | null)}
      */
-    deviationSince(timestamp: (Date | ZoneDateTime), serviceId?: string, ...args: any[]): (number | null);
+    deviationSince(timestamp: any, serviceId: any): any;
     /**
      * Gets the evolution rate of the state of a given Item since a certain point in time.
      *
@@ -52,7 +51,7 @@ declare class ItemHistory {
      * @param {string} [serviceId] optional persistance service ID
      * @returns {(Number | null)}
      */
-    evolutionRate(timestamp: (Date | ZoneDateTime), serviceId?: string, ...args: any[]): (number | null);
+    evolutionRate(timestamp: any, serviceId: any): any;
     /**
      * Retrieves the historic item state for a given item at a certain point in time.
      *
@@ -60,14 +59,14 @@ declare class ItemHistory {
      * @param {string} [serviceId] optional persistance service ID
      * @returns {*} state
      */
-    historicState(timestamp: (Date | ZoneDateTime), serviceId?: string, ...args: any[]): any;
+    historicState(timestamp: any, serviceId: any): any;
     /**
      * Query the last update time of a given item.
      *
      * @param {string} [serviceId] optional persistance service ID
      * @returns {(Date | null)}
      */
-    lastUpdate(serviceId?: string, ...args: any[]): (Date | null);
+    lastUpdate(serviceId: any): Date;
     /**
      * Gets the historic item with the maximum value of the state of a given item since a certain point in time.
      *
@@ -75,7 +74,7 @@ declare class ItemHistory {
      * @param {string} [serviceId] optional persistance service ID
      * @returns {*} state
      */
-    maximumSince(timestamp: (Date | ZoneDateTime), serviceId?: string, ...args: any[]): any;
+    maximumSince(timestamp: any, serviceId: any): any;
     /**
      * Gets the historic item with the minimum value of the state of a given item since a certain point in time.
      *
@@ -83,13 +82,13 @@ declare class ItemHistory {
      * @param {string} [serviceId] optional persistance service ID
      * @returns {*} state
      */
-    minimumSince(timestamp: (Date | ZoneDateTime), serviceId?: string, ...args: any[]): any;
+    minimumSince(timestamp: any, serviceId: any): any;
     /**
      * Persists the state of a given item
      *
      * @param {string} [serviceId] optional persistance service ID
      */
-    persist(serviceId?: string, ...args: any[]): void;
+    persist(serviceId: any): void;
     /**
      * Returns the previous state of a given item.
      *
@@ -97,7 +96,7 @@ declare class ItemHistory {
      * @param {string} [serviceId] optional persistance service ID
      * @returns {*} state
      */
-    previousState(skipEqual?: boolean, serviceId?: string, ...args: any[]): any;
+    previousState(skipEqual: any, serviceId: any): any;
     /**
      * Gets the sum of the state of a given item since a certain point in time.
      *
@@ -105,7 +104,7 @@ declare class ItemHistory {
      * @param {string} [serviceId] optional persistance service ID
      * @returns {(Number | null)}
      */
-    sumSince(timestamp: (Date | ZoneDateTime), serviceId?: string, ...args: any[]): (number | null);
+    sumSince(timestamp: any, serviceId: any): any;
     /**
      * Checks if the state of a given item has been updated since a certain point in time.
      *
@@ -113,7 +112,7 @@ declare class ItemHistory {
      * @param {string} [serviceId] optional persistance service ID
      * @returns {boolean}
      */
-    updatedSince(timestamp: (Date | ZoneDateTime), serviceId?: string, ...args: any[]): boolean;
+    updatedSince(timestamp: any, serviceId: any): any;
     /**
      * Gets the variance of the state of the given Item since a certain point in time.
      *
@@ -121,20 +120,14 @@ declare class ItemHistory {
      * @param {string} [serviceId] optional persistance service ID
      * @returns {*} state
      */
-    varianceSince(timestamp: (Date | ZoneDateTime), serviceId?: string, ...args: any[]): any;
+    varianceSince(timestamp: any, serviceId: any): any;
     /**
      * Retrieves the historic item state for a given item at the current point in time.
      * @param {string} [serviceId] optional persistance service ID
      * @returns {*} state
      */
-    latestState(serviceId?: string, ...args: any[]): any;
+    latestState(serviceId: any): any;
     _stateOrNull(result: any): any;
     _dateOrNull(result: any): Date;
     _decimalOrNull(result: any): any;
 }
-declare namespace ItemHistory {
-    export { HostItem, HostGroupFunction, ZoneDateTime };
-}
-type ZoneDateTime = any;
-type HostItem = any;
-type HostGroupFunction = any;

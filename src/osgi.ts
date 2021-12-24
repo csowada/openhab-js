@@ -1,23 +1,22 @@
-'use strict';
-
 /**
  * OSGi module.
  * This module provides access to OSGi services.
  * 
  */
  
-const log = require('./log')('osgi');
+import logger from "./log";
+
 const bundleContext = require('@runtime/osgi').bundleContext;
 const lifecycle = require('@runtime/osgi').lifecycle;
 const Hashtable: any = Java.type('java.util.Hashtable');
+const log = logger('osgi');
 
 /**
  * Map of interface names to sets of services registered (by this module)
  */
-let registeredServices = {};
+const registeredServices = {};
 
-
-let jsObjectToHashtable = function(obj) {
+const jsObjectToHashtable = function(obj) {
     if(obj === null) {
         return null;
     }
@@ -37,7 +36,7 @@ let jsObjectToHashtable = function(obj) {
  * @returns an instance of the service, or null if it cannot be found
  * @memberOf osgi
  */
-let lookupService = function (classOrName) {
+const lookupService = function (classOrName) {
     var bc = bundleContext;
     if(bundleContext === undefined) {    
         log.warn("bundleContext is undefined");
@@ -61,7 +60,7 @@ let lookupService = function (classOrName) {
  * @throws {Error} if no services of the requested type(s) can be found
  * @memberOf osgi
  */
-let getService = function (...classOrNames) {
+export const getService = function (...classOrNames) {
     let rv = null;
 
     for(let classOrName of classOrNames) {
@@ -87,19 +86,19 @@ let getService = function (...classOrNames) {
  * @returns {Object[]} any instances of the service that can be found
  * @memberOf osgi
  */
-let findServices = function (className, filter) {
+export const findServices = function (className, filter) {
     if (bundleContext !== null) {
         var refs = bundleContext.getAllServiceReferences(className, filter);
         return refs != null ? [...refs].map(ref => bundleContext.getService(ref)) : [];
     }
 }
 
-let registerService = function(service, ...interfaceNames) {
+export const registerService = function(service, ...interfaceNames) {
     lifecycle.addDisposeHook(() => unregisterService(service));
     registerPermanentService(service, interfaceNames, null);
 }
 
-let registerPermanentService = function(service, interfaceNames, properties = null) {
+export const registerPermanentService = function(service, interfaceNames, properties = null) {
     
     let registration = bundleContext.registerService(interfaceNames, service, jsObjectToHashtable(properties));
 
@@ -113,7 +112,7 @@ let registerPermanentService = function(service, interfaceNames, properties = nu
     return registration;
 }
 
-let unregisterService = function(serviceToUnregister) {
+export const unregisterService = function(serviceToUnregister) {
 
     log.debug("Unregistering service {}", serviceToUnregister);
 
@@ -128,12 +127,4 @@ let unregisterService = function(serviceToUnregister) {
             }
         });
     }
-}
-
-export = {
-    getService,
-    findServices,
-    registerService,
-    registerPermanentService,
-    unregisterService
 }

@@ -1,10 +1,11 @@
-export class StaticCallbackMetadataProvider extends AbstractProvider {
-    constructor();
+import { AbstractProvider } from "../provider";
+export declare class StaticCallbackMetadataProvider extends AbstractProvider {
     metadataCallbacks: any[];
+    constructor();
     addProviderChangeListener(listener: any): void;
     removeProviderChangeListener(listener: any): void;
     addMetadataCallback(callback: any): void;
     getAll(): any;
 }
-import { AbstractProvider } from "openhab/provider";
-export declare function staticCallbackMetadataProvider(): StaticCallbackMetadataProvider;
+declare const _default: () => StaticCallbackMetadataProvider;
+export default _default;

@@ -1,32 +1,29 @@
-'use strict';
-var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
-    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
-        if (ar || !(i in from)) {
-            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
-            ar[i] = from[i];
-        }
-    }
-    return to.concat(ar || Array.prototype.slice.call(from));
-};
+"use strict";
 /**
  * OSGi module.
  * This module provides access to OSGi services.
  *
  */
-var log = require('./log')('osgi');
-var bundleContext = require('@runtime/osgi').bundleContext;
-var lifecycle = require('@runtime/osgi').lifecycle;
-var Hashtable = Java.type('java.util.Hashtable');
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.unregisterService = exports.registerPermanentService = exports.registerService = exports.findServices = exports.getService = void 0;
+const log_1 = __importDefault(require("./log"));
+const bundleContext = require('@runtime/osgi').bundleContext;
+const lifecycle = require('@runtime/osgi').lifecycle;
+const Hashtable = Java.type('java.util.Hashtable');
+const log = (0, log_1.default)('osgi');
 /**
  * Map of interface names to sets of services registered (by this module)
  */
-var registeredServices = {};
-var jsObjectToHashtable = function (obj) {
+const registeredServices = {};
+const jsObjectToHashtable = function (obj) {
     if (obj === null) {
         return null;
     }
-    var rv = new Hashtable();
-    for (var k in obj) {
+    let rv = new Hashtable();
+    for (let k in obj) {
         rv.put(k, obj[k]);
     }
     return rv;
@@ -39,12 +36,12 @@ var jsObjectToHashtable = function (obj) {
  * @returns an instance of the service, or null if it cannot be found
  * @memberOf osgi
  */
-var lookupService = function (classOrName) {
+const lookupService = function (classOrName) {
     var bc = bundleContext;
     if (bundleContext === undefined) {
         log.warn("bundleContext is undefined");
         var FrameworkUtil = Java.type("org.osgi.framework.FrameworkUtil");
-        var _bundle = FrameworkUtil.getBundle(scriptExtension["class"]);
+        var _bundle = FrameworkUtil.getBundle(scriptExtension.class);
         bc = (_bundle !== null) ? _bundle.getBundleContext() : null;
     }
     if (bc !== null) {
@@ -62,26 +59,22 @@ var lookupService = function (classOrName) {
  * @throws {Error} if no services of the requested type(s) can be found
  * @memberOf osgi
  */
-var getService = function () {
-    var classOrNames = [];
-    for (var _i = 0; _i < arguments.length; _i++) {
-        classOrNames[_i] = arguments[_i];
-    }
-    var rv = null;
-    for (var _a = 0, classOrNames_1 = classOrNames; _a < classOrNames_1.length; _a++) {
-        var classOrName = classOrNames_1[_a];
+const getService = function (...classOrNames) {
+    let rv = null;
+    for (let classOrName of classOrNames) {
         try {
             rv = lookupService(classOrName);
         }
         catch (e) {
-            log.warn("Failed to get service ".concat(classOrName, ": {}"), e);
+            log.warn(`Failed to get service ${classOrName}: {}`, e);
         }
         if (typeof rv !== 'undefined' && rv !== null) {
             return rv;
         }
     }
-    throw Error("Failed to get any services of type(s): ".concat(classOrNames));
+    throw Error(`Failed to get any services of type(s): ${classOrNames}`);
 };
+exports.getService = getService;
 /**
  * Finds services registered with OSGi.
  *
@@ -90,54 +83,41 @@ var getService = function () {
  * @returns {Object[]} any instances of the service that can be found
  * @memberOf osgi
  */
-var findServices = function (className, filter) {
+const findServices = function (className, filter) {
     if (bundleContext !== null) {
         var refs = bundleContext.getAllServiceReferences(className, filter);
-        return refs != null ? __spreadArray([], refs, true).map(function (ref) { return bundleContext.getService(ref); }) : [];
+        return refs != null ? [...refs].map(ref => bundleContext.getService(ref)) : [];
     }
 };
-var registerService = function (service) {
-    var interfaceNames = [];
-    for (var _i = 1; _i < arguments.length; _i++) {
-        interfaceNames[_i - 1] = arguments[_i];
-    }
-    lifecycle.addDisposeHook(function () { return unregisterService(service); });
-    registerPermanentService(service, interfaceNames, null);
+exports.findServices = findServices;
+const registerService = function (service, ...interfaceNames) {
+    lifecycle.addDisposeHook(() => (0, exports.unregisterService)(service));
+    (0, exports.registerPermanentService)(service, interfaceNames, null);
 };
-var registerPermanentService = function (service, interfaceNames, properties) {
-    if (properties === void 0) { properties = null; }
-    var registration = bundleContext.registerService(interfaceNames, service, jsObjectToHashtable(properties));
-    for (var _i = 0, interfaceNames_1 = interfaceNames; _i < interfaceNames_1.length; _i++) {
-        var interfaceName = interfaceNames_1[_i];
+exports.registerService = registerService;
+const registerPermanentService = function (service, interfaceNames, properties = null) {
+    let registration = bundleContext.registerService(interfaceNames, service, jsObjectToHashtable(properties));
+    for (let interfaceName of interfaceNames) {
         if (typeof registeredServices[interfaceName] === 'undefined') {
             registeredServices[interfaceName] = new Set();
         }
-        registeredServices[interfaceName].add({ service: service, registration: registration });
+        registeredServices[interfaceName].add({ service, registration });
         log.debug("Registered service {} of as {}", service, interfaceName);
     }
     return registration;
 };
-var unregisterService = function (serviceToUnregister) {
+exports.registerPermanentService = registerPermanentService;
+const unregisterService = function (serviceToUnregister) {
     log.debug("Unregistering service {}", serviceToUnregister);
-    var _loop_1 = function (interfaceName) {
-        var servicesForInterface = registeredServices[interfaceName];
-        servicesForInterface.forEach(function (_a) {
-            var service = _a.service, registration = _a.registration;
+    for (let interfaceName in registeredServices) {
+        let servicesForInterface = registeredServices[interfaceName];
+        servicesForInterface.forEach(({ service, registration }) => {
             if (service == serviceToUnregister) {
-                servicesForInterface["delete"]({ service: service, registration: registration });
+                servicesForInterface.delete({ service, registration });
                 registration.unregister();
                 log.debug("Unregistered service: {}", service);
             }
         });
-    };
-    for (var interfaceName in registeredServices) {
-        _loop_1(interfaceName);
     }
 };
-module.exports = {
-    getService: getService,
-    findServices: findServices,
-    registerService: registerService,
-    registerPermanentService: registerPermanentService,
-    unregisterService: unregisterService
-};
+exports.unregisterService = unregisterService;

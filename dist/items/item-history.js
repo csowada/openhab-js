@@ -1,20 +1,8 @@
-var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
-    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
-        if (ar || !(i in from)) {
-            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
-            ar[i] = from[i];
-        }
-    }
-    return to.concat(ar || Array.prototype.slice.call(from));
-};
-/**
- * @typedef { import("../global").HostItem } HostItem
- * @typedef { import("../global").HostGroupFunction } HostGroupFunction
- * @typedef { import("@js-joda").ZoneDateTime } ZoneDateTime
- *
- */
-var PersistenceExtensions = Java.type("org.openhab.core.persistence.extensions.PersistenceExtensions");
-var DateTime = Java.type('java.time.ZonedDateTime');
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ItemHistory = void 0;
+const PersistenceExtensions = Java.type("org.openhab.core.persistence.extensions.PersistenceExtensions");
+const DateTime = Java.type('java.time.ZonedDateTime');
 /**
  * Class representing the historic state of an openHAB Item
  *
@@ -22,8 +10,8 @@ var DateTime = Java.type('java.time.ZonedDateTime');
  * @memberOf items
  * @hideconstructor
  */
-var ItemHistory = /** @class */ (function () {
-    function ItemHistory(item) {
+class ItemHistory {
+    constructor(item) {
         this.item = item;
     }
     /**
@@ -37,9 +25,9 @@ var ItemHistory = /** @class */ (function () {
      * @param {string} [serviceId] optional persistance service ID
      * @returns {(Number | null)}
      */
-    ItemHistory.prototype.averageSince = function (timestamp, serviceId) {
-        return this._decimalOrNull(PersistenceExtensions.averageSince.apply(PersistenceExtensions, __spreadArray([this.item], arguments, false)));
-    };
+    averageSince(timestamp, serviceId) {
+        return this._decimalOrNull(PersistenceExtensions.averageSince(this.item, ...arguments));
+    }
     /**
      * Checks if the state of a given item has changed since a certain point in time.
      *
@@ -47,9 +35,9 @@ var ItemHistory = /** @class */ (function () {
      * @param {string} [serviceId] optional persistance service ID
      * @returns {boolean}
      */
-    ItemHistory.prototype.changedSince = function (timestamp, serviceId) {
-        return PersistenceExtensions.changedSince.apply(PersistenceExtensions, __spreadArray([this.item], arguments, false));
-    };
+    changedSince(timestamp, serviceId) {
+        return PersistenceExtensions.changedSince(this.item, ...arguments);
+    }
     /**
      * Gets the difference value of the state of a given item since a certain point in time.
      *
@@ -57,9 +45,9 @@ var ItemHistory = /** @class */ (function () {
      * @param {string} [serviceId] optional persistance service ID
      * @returns {(Number | null)}
      */
-    ItemHistory.prototype.deltaSince = function (timestamp, serviceId) {
-        return this._decimalOrNull(PersistenceExtensions.deltaSince.apply(PersistenceExtensions, __spreadArray([this.item], arguments, false)));
-    };
+    deltaSince(timestamp, serviceId) {
+        return this._decimalOrNull(PersistenceExtensions.deltaSince(this.item, ...arguments));
+    }
     /**
      * Gets the standard deviation of the state of the given Item since a certain point in time.
      *
@@ -67,9 +55,9 @@ var ItemHistory = /** @class */ (function () {
      * @param {string} [serviceId] optional persistance service ID
      * @returns {(Number | null)}
      */
-    ItemHistory.prototype.deviationSince = function (timestamp, serviceId) {
-        return this._decimalOrNull(PersistenceExtensions.deviationSince.apply(PersistenceExtensions, __spreadArray([this.item], arguments, false)));
-    };
+    deviationSince(timestamp, serviceId) {
+        return this._decimalOrNull(PersistenceExtensions.deviationSince(this.item, ...arguments));
+    }
     /**
      * Gets the evolution rate of the state of a given Item since a certain point in time.
      *
@@ -77,9 +65,9 @@ var ItemHistory = /** @class */ (function () {
      * @param {string} [serviceId] optional persistance service ID
      * @returns {(Number | null)}
      */
-    ItemHistory.prototype.evolutionRate = function (timestamp, serviceId) {
-        return this._decimalOrNull(PersistenceExtensions.evolutionRate.apply(PersistenceExtensions, __spreadArray([this.item], arguments, false)));
-    };
+    evolutionRate(timestamp, serviceId) {
+        return this._decimalOrNull(PersistenceExtensions.evolutionRate(this.item, ...arguments));
+    }
     /**
      * Retrieves the historic item state for a given item at a certain point in time.
      *
@@ -87,19 +75,19 @@ var ItemHistory = /** @class */ (function () {
      * @param {string} [serviceId] optional persistance service ID
      * @returns {*} state
      */
-    ItemHistory.prototype.historicState = function (timestamp, serviceId) {
-        return this._stateOrNull(PersistenceExtensions.historicState.apply(PersistenceExtensions, __spreadArray([this.item], arguments, false)));
-    };
+    historicState(timestamp, serviceId) {
+        return this._stateOrNull(PersistenceExtensions.historicState(this.item, ...arguments));
+    }
     /**
      * Query the last update time of a given item.
      *
      * @param {string} [serviceId] optional persistance service ID
      * @returns {(Date | null)}
      */
-    ItemHistory.prototype.lastUpdate = function (serviceId) {
-        console.log.apply(console, __spreadArray(["Last Update"], arguments, false));
-        return this._dateOrNull(PersistenceExtensions.lastUpdate.apply(PersistenceExtensions, __spreadArray([this.item], arguments, false)));
-    };
+    lastUpdate(serviceId) {
+        console.log("Last Update", ...arguments);
+        return this._dateOrNull(PersistenceExtensions.lastUpdate(this.item, ...arguments));
+    }
     /**
      * Gets the historic item with the maximum value of the state of a given item since a certain point in time.
      *
@@ -107,9 +95,9 @@ var ItemHistory = /** @class */ (function () {
      * @param {string} [serviceId] optional persistance service ID
      * @returns {*} state
      */
-    ItemHistory.prototype.maximumSince = function (timestamp, serviceId) {
-        return this._stateOrNull(PersistenceExtensions.maximumSince.apply(PersistenceExtensions, __spreadArray([this.item], arguments, false)));
-    };
+    maximumSince(timestamp, serviceId) {
+        return this._stateOrNull(PersistenceExtensions.maximumSince(this.item, ...arguments));
+    }
     /**
      * Gets the historic item with the minimum value of the state of a given item since a certain point in time.
      *
@@ -117,17 +105,17 @@ var ItemHistory = /** @class */ (function () {
      * @param {string} [serviceId] optional persistance service ID
      * @returns {*} state
      */
-    ItemHistory.prototype.minimumSince = function (timestamp, serviceId) {
-        return this._stateOrNull(PersistenceExtensions.minimumSince.apply(PersistenceExtensions, __spreadArray([this.item], arguments, false)));
-    };
+    minimumSince(timestamp, serviceId) {
+        return this._stateOrNull(PersistenceExtensions.minimumSince(this.item, ...arguments));
+    }
     /**
      * Persists the state of a given item
      *
      * @param {string} [serviceId] optional persistance service ID
      */
-    ItemHistory.prototype.persist = function (serviceId) {
-        PersistenceExtensions.persist.apply(PersistenceExtensions, __spreadArray([this.item], arguments, false));
-    };
+    persist(serviceId) {
+        PersistenceExtensions.persist(this.item, ...arguments);
+    }
     /**
      * Returns the previous state of a given item.
      *
@@ -135,9 +123,9 @@ var ItemHistory = /** @class */ (function () {
      * @param {string} [serviceId] optional persistance service ID
      * @returns {*} state
      */
-    ItemHistory.prototype.previousState = function (skipEqual, serviceId) {
-        return this._stateOrNull(PersistenceExtensions.previousState.apply(PersistenceExtensions, __spreadArray([this.item], arguments, false)));
-    };
+    previousState(skipEqual, serviceId) {
+        return this._stateOrNull(PersistenceExtensions.previousState(this.item, ...arguments));
+    }
     /**
      * Gets the sum of the state of a given item since a certain point in time.
      *
@@ -145,9 +133,9 @@ var ItemHistory = /** @class */ (function () {
      * @param {string} [serviceId] optional persistance service ID
      * @returns {(Number | null)}
      */
-    ItemHistory.prototype.sumSince = function (timestamp, serviceId) {
-        return this._decimalOrNull(PersistenceExtensions.sumSince.apply(PersistenceExtensions, __spreadArray([this.item], arguments, false)));
-    };
+    sumSince(timestamp, serviceId) {
+        return this._decimalOrNull(PersistenceExtensions.sumSince(this.item, ...arguments));
+    }
     /**
      * Checks if the state of a given item has been updated since a certain point in time.
      *
@@ -155,9 +143,9 @@ var ItemHistory = /** @class */ (function () {
      * @param {string} [serviceId] optional persistance service ID
      * @returns {boolean}
      */
-    ItemHistory.prototype.updatedSince = function (timestamp, serviceId) {
-        return PersistenceExtensions.updatedSince.apply(PersistenceExtensions, __spreadArray([this.item], arguments, false));
-    };
+    updatedSince(timestamp, serviceId) {
+        return PersistenceExtensions.updatedSince(this.item, ...arguments);
+    }
     /**
      * Gets the variance of the state of the given Item since a certain point in time.
      *
@@ -165,26 +153,25 @@ var ItemHistory = /** @class */ (function () {
      * @param {string} [serviceId] optional persistance service ID
      * @returns {*} state
      */
-    ItemHistory.prototype.varianceSince = function (timestamp, serviceId) {
-        return this._stateOrNull(PersistenceExtensions.varianceSince.apply(PersistenceExtensions, __spreadArray([this.item], arguments, false)));
-    };
+    varianceSince(timestamp, serviceId) {
+        return this._stateOrNull(PersistenceExtensions.varianceSince(this.item, ...arguments));
+    }
     /**
      * Retrieves the historic item state for a given item at the current point in time.
      * @param {string} [serviceId] optional persistance service ID
      * @returns {*} state
      */
-    ItemHistory.prototype.latestState = function (serviceId) {
-        return this.historicState.apply(this, __spreadArray([DateTime.now()], arguments, false));
-    };
-    ItemHistory.prototype._stateOrNull = function (result) {
+    latestState(serviceId) {
+        return this.historicState(DateTime.now(), serviceId);
+    }
+    _stateOrNull(result) {
         return result === null ? null : result.state;
-    };
-    ItemHistory.prototype._dateOrNull = function (result) {
+    }
+    _dateOrNull(result) {
         return result === null ? null : new Date(result.toInstant().toEpochMilli());
-    };
-    ItemHistory.prototype._decimalOrNull = function (result) {
+    }
+    _decimalOrNull(result) {
         return result === null ? null : result.toBigDecimal();
-    };
-    return ItemHistory;
-}());
-module.exports = ItemHistory;
+    }
+}
+exports.ItemHistory = ItemHistory;

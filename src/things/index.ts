@@ -1,16 +1,17 @@
-const JavaThingBuilder = Java.type('org.openhab.core.thing.binding.builder.ThingBuilder');
-const ThingTypeUID = Java.type('org.openhab.core.thing.ThingTypeUID');
-const JavaChannelBuilder = Java.type('org.openhab.core.thing.binding.builder.ChannelBuilder');
-const ChannelUID = Java.type('org.openhab.core.thing.ChannelUID');
-const ThingUID = Java.type('org.openhab.core.thing.ThingUID');
-const ChannelKind = Java.type('org.openhab.core.thing.type.ChannelKind');
-const ChannelTypeUID = Java.type('org.openhab.core.thing.type.ChannelTypeUID');
-const Configuration = Java.type('org.openhab.core.config.core.Configuration');
+const JavaThingBuilder: any = Java.type('org.openhab.core.thing.binding.builder.ThingBuilder');
+const ThingTypeUID: any = Java.type('org.openhab.core.thing.ThingTypeUID');
+const JavaChannelBuilder: any = Java.type('org.openhab.core.thing.binding.builder.ChannelBuilder');
+const ChannelUID: any = Java.type('org.openhab.core.thing.ChannelUID');
+const ThingUID: any = Java.type('org.openhab.core.thing.ThingUID');
+const ChannelKind: any = Java.type('org.openhab.core.thing.type.ChannelKind');
+const ChannelTypeUID: any = Java.type('org.openhab.core.thing.type.ChannelTypeUID');
+const Configuration: any = Java.type('org.openhab.core.config.core.Configuration');
 
 /**
  * 
  */
 class OHThing {
+    rawThing: any;
     constructor(rawThing) {
         this.rawThing = rawThing;
     }
@@ -20,6 +21,7 @@ class OHThing {
  * 
  */
 class OHChannel {
+    rawChannel: any;
     constructor(rawChannel) {
         this.rawChannel = rawChannel;
     }
@@ -33,6 +35,12 @@ class OHChannel {
  * 
  */
 class ThingBuilder {
+
+    thingTypeUID: any;
+    thingId: any;
+    thingUID: any;
+    rawBuilder: any;
+
     constructor(thingTypeUID, thingId, bridgeUID) {
         if (typeof thingTypeUID === 'string') {
             thingTypeUID = new ThingTypeUID(...thingTypeUID.split(':'));
@@ -40,7 +48,6 @@ class ThingBuilder {
 
         this.thingTypeUID = thingTypeUID;
         this.thingId = thingId;
-
 
         if (typeof bridgeUID !== 'undefined') {
             if (typeof bridgeUID === 'string') {
@@ -56,12 +63,12 @@ class ThingBuilder {
         }
     }
 
-    withChannel(channel) {
+    withChannel(channel: OHChannel) {
         this.rawBuilder.withChannel(channel.rawChannel);
         return this;
     }
 
-    withLabel(label) {
+    withLabel(label: string) {
         this.rawBuilder.withLabel(label);
         return this;
     }
@@ -75,6 +82,9 @@ class ThingBuilder {
  * 
  */
 class ChannelBuilder {
+
+    rawBuilder: any;
+
     constructor(thingUID, channelId, acceptedItemType) {
         let channelUID = new ChannelUID(thingUID, channelId);
         this.rawBuilder = JavaChannelBuilder.create(channelUID, acceptedItemType);
@@ -90,7 +100,7 @@ class ChannelBuilder {
         return this;
     }
 
-    withLabel(label) {
+    withLabel(label: string) {
         this.rawBuilder.withLabel(label);
         return this;
     }
@@ -115,7 +125,7 @@ class ChannelBuilder {
  * @param {String} bridgeUID 
  * @returns 
  */
-const newThingBuilder = (thingTypeUID, id, bridgeUID) => new ThingBuilder(thingTypeUID, id, bridgeUID);
+ export const newThingBuilder = (thingTypeUID, id, bridgeUID) => new ThingBuilder(thingTypeUID, id, bridgeUID);
 
 
 /**
@@ -125,12 +135,12 @@ const newThingBuilder = (thingTypeUID, id, bridgeUID) => new ThingBuilder(thingT
  * @param {String} acceptedItemType 
  * @returns 
  */
-const newChannelBuilder = (thingUID, channelId, acceptedItemType) => new ChannelBuilder(thingUID, channelId, acceptedItemType);
+export const newChannelBuilder = (thingUID, channelId, acceptedItemType) => new ChannelBuilder(thingUID, channelId, acceptedItemType);
 
-module.exports = {
-    newThingBuilder,
-    newChannelBuilder
-}
+// module.exports = {
+//     newThingBuilder,
+//     newChannelBuilder
+// }
 
-module.exports.ThingBuilder = ThingBuilder;
-module.exports.ChannelBuilder = ChannelBuilder;
+// module.exports.ThingBuilder = ThingBuilder;
+// module.exports.ChannelBuilder = ChannelBuilder;

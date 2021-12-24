@@ -1,4 +1,4 @@
-import osgi from "./osgi";
+import * as osgi from "./osgi";
 
 function getAllFunctionNames(obj) {
     var props = [];
@@ -22,7 +22,7 @@ export class AbstractProvider {
         this.javaType = Java.extend(type);//require('@runtime/osgi').classutil.extend(type);
     }
 
-    register() {
+    registerService() {
         let javaConfig = {};
 
         let functionNamesToBind = getAllFunctionNames(this).

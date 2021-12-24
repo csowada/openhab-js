@@ -1,16 +1,34 @@
 'use strict';
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
 };
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.TimeOfDayTrigger = exports.GenericCronTrigger = exports.SystemStartlevelTrigger = exports.ThingStatusChangeTrigger = exports.ThingStatusUpdateTrigger = exports.GroupCommandTrigger = exports.GroupStateUpdateTrigger = exports.GroupStateChangeTrigger = exports.ItemCommandTrigger = exports.ItemStateUpdateTrigger = exports.ItemStateChangeTrigger = exports.ChannelEventTrigger = void 0;
 /**
  * Triggers namespace.
  * This namespace allows creation of openHAB rule triggers.
  *
  * @namespace triggers
  */
-var utils_1 = __importDefault(require("./utils"));
-var ModuleBuilder = Java.type("org.openhab.core.automation.util.ModuleBuilder");
-var Configuration = Java.type("org.openhab.core.config.core.Configuration");
+const utils = __importStar(require("./utils"));
+const ModuleBuilder = Java.type("org.openhab.core.automation.util.ModuleBuilder");
+const Configuration = Java.type("org.openhab.core.config.core.Configuration");
 /**
  * Creates a trigger. Internal function, instead use predefined trigger types.
  *
@@ -21,9 +39,9 @@ var Configuration = Java.type("org.openhab.core.config.core.Configuration");
  * @param {Configuration} config the trigger configuration
  * @returns {any} the trigger
  */
-var createTrigger = function (typeString, name, config) {
+let createTrigger = function (typeString, name, config) {
     if (typeof name === 'undefined' || name === null) {
-        name = utils_1["default"].randomUUID().toString();
+        name = utils.randomUUID().toString();
     }
     return ModuleBuilder.createTrigger()
         .withId(name)
@@ -45,10 +63,11 @@ var createTrigger = function (typeString, name, config) {
  * @returns {any | null} trigger
  *
  */
-var ChannelEventTrigger = function (channel, event, triggerName) { return createTrigger("core.ChannelEventTrigger", triggerName, {
+const ChannelEventTrigger = (channel, event, triggerName) => createTrigger("core.ChannelEventTrigger", triggerName, {
     "channelUID": channel,
     "event": event
-}); };
+});
+exports.ChannelEventTrigger = ChannelEventTrigger;
 /**
  * Creates a trigger that fires upon an item changing state.
  *
@@ -62,11 +81,12 @@ var ChannelEventTrigger = function (channel, event, triggerName) { return create
  * @param {String} [newState] the new state of the item
  * @param {String} [triggerName] the name of the trigger to create
  */
-var ItemStateChangeTrigger = function (itemName, oldState, newState, triggerName) { return createTrigger("core.ItemStateChangeTrigger", triggerName, {
+const ItemStateChangeTrigger = (itemName, oldState, newState, triggerName) => createTrigger("core.ItemStateChangeTrigger", triggerName, {
     "itemName": itemName,
     "state": newState,
     "oldState": oldState
-}); };
+});
+exports.ItemStateChangeTrigger = ItemStateChangeTrigger;
 /**
  * Creates a trigger that fires upon an item receiving a state update. Note that the item does not need to change state.
  *
@@ -79,10 +99,11 @@ var ItemStateChangeTrigger = function (itemName, oldState, newState, triggerName
  * @param {String} [state] the new state of the item
  * @param {String} [triggerName] the name of the trigger to create
  */
-var ItemStateUpdateTrigger = function (itemName, state, triggerName) { return createTrigger("core.ItemStateUpdateTrigger", triggerName, {
+const ItemStateUpdateTrigger = (itemName, state, triggerName) => createTrigger("core.ItemStateUpdateTrigger", triggerName, {
     "itemName": itemName,
     "state": state
-}); };
+});
+exports.ItemStateUpdateTrigger = ItemStateUpdateTrigger;
 /**
  * Creates a trigger that fires upon an item receiving a command. Note that the item does not need to change state.
  *
@@ -95,10 +116,11 @@ var ItemStateUpdateTrigger = function (itemName, state, triggerName) { return cr
  * @param {String} [command] the command received
  * @param {String} [triggerName] the name of the trigger to create
  */
-var ItemCommandTrigger = function (itemName, command, triggerName) { return createTrigger("core.ItemCommandTrigger", triggerName, {
+const ItemCommandTrigger = (itemName, command, triggerName) => createTrigger("core.ItemCommandTrigger", triggerName, {
     "itemName": itemName,
     "command": command
-}); };
+});
+exports.ItemCommandTrigger = ItemCommandTrigger;
 /**
  * Creates a trigger that fires upon a member of a group changing state.
  *
@@ -112,11 +134,12 @@ var ItemCommandTrigger = function (itemName, command, triggerName) { return crea
  * @param {String} [newState] the new state of the group
  * @param {String} [triggerName] the name of the trigger to create
  */
-var GroupStateChangeTrigger = function (groupName, oldState, newState, triggerName) { return createTrigger("core.GroupStateChangeTrigger", triggerName, {
+const GroupStateChangeTrigger = (groupName, oldState, newState, triggerName) => createTrigger("core.GroupStateChangeTrigger", triggerName, {
     "groupName": groupName,
     "state": newState,
     "oldState": oldState
-}); };
+});
+exports.GroupStateChangeTrigger = GroupStateChangeTrigger;
 /**
  * Creates a trigger that fires upon a member of a group receiving a state update. Note that group item does not need to change state.
  *
@@ -129,10 +152,11 @@ var GroupStateChangeTrigger = function (groupName, oldState, newState, triggerNa
  * @param {String} [state] the new state of the group
  * @param {String} [triggerName] the name of the trigger to create
  */
-var GroupStateUpdateTrigger = function (groupName, state, triggerName) { return createTrigger("core.GroupStateUpdateTrigger", triggerName, {
+const GroupStateUpdateTrigger = (groupName, state, triggerName) => createTrigger("core.GroupStateUpdateTrigger", triggerName, {
     "groupName": groupName,
     "state": state
-}); };
+});
+exports.GroupStateUpdateTrigger = GroupStateUpdateTrigger;
 /**
  * Creates a trigger that fires upon a member of a group receiving a command. Note that the group does not need to change state.
  *
@@ -145,10 +169,11 @@ var GroupStateUpdateTrigger = function (groupName, state, triggerName) { return 
  * @param {String} [command] the command received
  * @param {String} [triggerName] the name of the trigger to create
  */
-var GroupCommandTrigger = function (groupName, command, triggerName) { return createTrigger("core.GroupCommandTrigger", triggerName, {
+const GroupCommandTrigger = (groupName, command, triggerName) => createTrigger("core.GroupCommandTrigger", triggerName, {
     "groupName": groupName,
     "command": command
-}); };
+});
+exports.GroupCommandTrigger = GroupCommandTrigger;
 /**
  * Creates a trigger that fires upon an Thing status updating
  *
@@ -161,10 +186,11 @@ var GroupCommandTrigger = function (groupName, command, triggerName) { return cr
  * @param {String} [status] the optional status to monitor for
  * @param {String} [triggerName] the name of the trigger to create
  */
-var ThingStatusUpdateTrigger = function (thingUID, status, triggerName) { return createTrigger("core.ThingStatusUpdateTrigger", triggerName, {
+const ThingStatusUpdateTrigger = (thingUID, status, triggerName) => createTrigger("core.ThingStatusUpdateTrigger", triggerName, {
     "thingUID": thingUID,
-    "status": status
-}); };
+    "status": status,
+});
+exports.ThingStatusUpdateTrigger = ThingStatusUpdateTrigger;
 /**
 * Creates a trigger that fires upon an Thing status changing
 *
@@ -178,11 +204,12 @@ var ThingStatusUpdateTrigger = function (thingUID, status, triggerName) { return
 * @param {String} [previousStatus] the optional previous state to monitor from
 * @param {String} [triggerName] the optional name of the trigger to create
 */
-var ThingStatusChangeTrigger = function (thingUID, status, previousStatus, triggerName) { return createTrigger("core.ThingStatusChangeTrigger", triggerName, {
+const ThingStatusChangeTrigger = (thingUID, status, previousStatus, triggerName) => createTrigger("core.ThingStatusChangeTrigger", triggerName, {
     "thingUID": thingUID,
     "status": status,
-    "previousStatus": previousStatus
-}); };
+    "previousStatus": previousStatus,
+});
+exports.ThingStatusChangeTrigger = ThingStatusChangeTrigger;
 /**
  * Creates a trigger that fires if a given start level is reached by the system
  *
@@ -202,9 +229,10 @@ var ThingStatusChangeTrigger = function (thingUID, status, previousStatus, trigg
  * @param {String} startlevel the system start level to be triggered on
  * @param {String} [triggerName] the name of the trigger to create
  */
-var SystemStartlevelTrigger = function (startlevel, triggerName) { return createTrigger("core.SystemStartlevelTrigger", triggerName, {
+const SystemStartlevelTrigger = (startlevel, triggerName) => createTrigger("core.SystemStartlevelTrigger", triggerName, {
     "startlevel": startlevel
-}); };
+});
+exports.SystemStartlevelTrigger = SystemStartlevelTrigger;
 /**
  * Creates a trigger that fires on a cron schedule. The supplied cron expression defines when the trigger will fire.
  *
@@ -215,9 +243,10 @@ var SystemStartlevelTrigger = function (startlevel, triggerName) { return create
  * @memberof triggers
  * @param {String} expression the cron expression defining the triggering schedule
  */
-var GenericCronTrigger = function (expression, triggerName) { return createTrigger("timer.GenericCronTrigger", triggerName, {
+const GenericCronTrigger = (expression, triggerName) => createTrigger("timer.GenericCronTrigger", triggerName, {
     "cronExpression": expression
-}); };
+});
+exports.GenericCronTrigger = GenericCronTrigger;
 /**
  * Creates a trigger that fires daily at a specific time. The supplied time defines when the trigger will fire.
  *
@@ -228,20 +257,7 @@ var GenericCronTrigger = function (expression, triggerName) { return createTrigg
  * @memberof triggers
  * @param {String} time the time expression defining the triggering schedule
  */
-var TimeOfDayTrigger = function (time, triggerName) { return createTrigger("timer.TimeOfDayTrigger", triggerName, {
+const TimeOfDayTrigger = (time, triggerName) => createTrigger("timer.TimeOfDayTrigger", triggerName, {
     "time": time
-}); };
-module.exports = {
-    ChannelEventTrigger: ChannelEventTrigger,
-    GenericCronTrigger: GenericCronTrigger,
-    GroupCommandTrigger: GroupCommandTrigger,
-    GroupStateChangeTrigger: GroupStateChangeTrigger,
-    GroupStateUpdateTrigger: GroupStateUpdateTrigger,
-    ItemCommandTrigger: ItemCommandTrigger,
-    ItemStateChangeTrigger: ItemStateChangeTrigger,
-    ItemStateUpdateTrigger: ItemStateUpdateTrigger,
-    SystemStartlevelTrigger: SystemStartlevelTrigger,
-    ThingStatusChangeTrigger: ThingStatusChangeTrigger,
-    ThingStatusUpdateTrigger: ThingStatusUpdateTrigger,
-    TimeOfDayTrigger: TimeOfDayTrigger
-};
+});
+exports.TimeOfDayTrigger = TimeOfDayTrigger;

@@ -6,15 +6,14 @@
  * @namespace metadata
  */
 
-import osgi from "../osgi";
-import utils from "../utils";
-// const osgi = require('../osgi');
-// const utils = require('../utils');
-const log = require('../log')('metadata');
+import * as osgi from "../osgi";
+import logger from "../log";
 
-let MetadataRegistry: any = osgi.getService("org.openhab.core.items.MetadataRegistry");
-let Metadata: any = Java.type("org.openhab.core.items.Metadata");
-let MetadataKey: any = Java.type("org.openhab.core.items.MetadataKey");
+const log = logger('metadata');
+
+const MetadataRegistry: any = osgi.getService("org.openhab.core.items.MetadataRegistry");
+const Metadata: any = Java.type("org.openhab.core.items.Metadata");
+const MetadataKey: any = Java.type("org.openhab.core.items.MetadataKey");
 
 
 /**

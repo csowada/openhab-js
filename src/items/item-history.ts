@@ -177,7 +177,7 @@ export class ItemHistory {
      * @returns {*} state
      */
     latestState(serviceId) {
-        return this.historicState(DateTime.now(), ...arguments);
+        return this.historicState(DateTime.now(), serviceId);
     }
 
     _stateOrNull(result) {

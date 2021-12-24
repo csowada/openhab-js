@@ -1,13 +1,6 @@
 'use strict';
-var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
-    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
-        if (ar || !(i in from)) {
-            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
-            ar[i] = from[i];
-        }
-    }
-    return to.concat(ar || Array.prototype.slice.call(from));
-};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Logger = void 0;
 /**
  * Log namespace.
  * This namespace provides loggers to log messages to the openHAB Log.
@@ -21,22 +14,22 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
 /**
  * Logger prefix
  */
-var LOGGER_PREFIX = "org.openhab.automation.script";
-var MessageFormatter = Java.type("org.slf4j.helpers.MessageFormatter");
+const LOGGER_PREFIX = "org.openhab.automation.script";
+const MessageFormatter = Java.type("org.slf4j.helpers.MessageFormatter");
 /**
  * Logger class. A named logger providing the ability to log formatted messages.
  *
  * @memberof log
  * @hideconstructor
  */
-var Logger = /** @class */ (function () {
+class Logger {
     /**
      * Creates a new logger. Don't use directly, use {@link log} on module.
      *
      * @param {String} _name the name of the logger. Will be prefixed by {@link LOGGER_PREFIX}
      * @param {*} _listener a callback to receive logging calls. Can be used to send calls elsewhere, such as escalate errors.
      */
-    function Logger(_name, appenderProvider) {
+    constructor(_name, appenderProvider) {
         this._name = _name || this._getCallerDetails("", 3).fileName.replace(/\.[^/.]+$/, "");
         this.appenderProvider = appenderProvider;
         this._logger = Java.type("org.slf4j.LoggerFactory").getLogger(LOGGER_PREFIX + "." + this.name.toString().toLowerCase());
@@ -49,8 +42,8 @@ var Logger = /** @class */ (function () {
      * @param {Number} ignoreStackDepth the number of stack frames which to ignore in calculating caller
      * @returns {Error} message as an error object, with fileName, caller and optional lineNumber properties
      */
-    Logger.prototype._getCallerDetails = function (msg, ignoreStackDepth) {
-        var stackLine = null;
+    _getCallerDetails(msg, ignoreStackDepth) {
+        let stackLine = null;
         if (!(msg instanceof Error)) {
             msg = Error(msg);
             stackLine = msg.stack.split('\n')[ignoreStackDepth];
@@ -59,7 +52,7 @@ var Logger = /** @class */ (function () {
             stackLine = msg.stack.split('\n')[1];
         }
         //pick out the call, fileName & lineNumber from the specific frame
-        var match = stackLine.match(/^\s+at\s*(?<caller>[^ ]*) \(?(?<fileName>[^:]+):(?<lineNumber>[0-9]+):[0-9]+\)?/);
+        let match = stackLine.match(/^\s+at\s*(?<caller>[^ ]*) \(?(?<fileName>[^:]+):(?<lineNumber>[0-9]+):[0-9]+\)?/);
         if (match) {
             Object.assign(msg, match.groups);
         }
@@ -79,7 +72,7 @@ var Logger = /** @class */ (function () {
             } //throw Error(`Failed to parse stack line: ${stackLine}`);
         }
         return msg;
-    };
+    }
     /**
      * Method to format a log message. Don't use directly.
      *
@@ -90,10 +83,9 @@ var Logger = /** @class */ (function () {
      * @param {String} [prefix=log] the prefix type, such as none, level, short or log.
      * @returns {Error} message with 'message' String property
      */
-    Logger.prototype._formatLogMessage = function (msg, levelString, ignoreStackDepth, prefix) {
-        if (prefix === void 0) { prefix = "none"; }
-        var clazz = this;
-        var msgData = {
+    _formatLogMessage(msg, levelString, ignoreStackDepth, prefix = "none") {
+        let clazz = this;
+        let msgData = {
             message: msg.toString(),
             get caller() {
                 this.cached = this.cached || clazz._getCallerDetails(msg, ignoreStackDepth);
@@ -103,37 +95,37 @@ var Logger = /** @class */ (function () {
         levelString = levelString.toUpperCase();
         switch (prefix) {
             case "none": return msgData.message;
-            case "level": return "[".concat(levelString, "] ").concat(msgData.message);
-            case "short": return "".concat(msgData.message, "\t\t[").concat(this.name, ", ").concat(msgData.caller.fileName, ":").concat(msgData.caller.lineNumber, "]");
-            case "log": return "".concat(msgData.message, "\t\t[").concat(this.name, " at source ").concat(msgData.caller.fileName, ", line ").concat(msgData.caller.lineNumber, "]");
-            default: throw Error("Unknown prefix type ".concat(prefix));
+            case "level": return `[${levelString}] ${msgData.message}`;
+            case "short": return `${msgData.message}\t\t[${this.name}, ${msgData.caller.fileName}:${msgData.caller.lineNumber}]`;
+            case "log": return `${msgData.message}\t\t[${this.name} at source ${msgData.caller.fileName}, line ${msgData.caller.lineNumber}]`;
+            default: throw Error(`Unknown prefix type ${prefix}`);
         }
-    };
+    }
     /**
      * Logs at ERROR level.
      * @see atLevel
      */
-    Logger.prototype.error = function () { this.atLevel.apply(this, __spreadArray(['error'], arguments, false)); };
+    error(msg, ...args) { this.atLevel('error', msg, ...args); }
     /**
      * Logs at ERROR level.
      * @see atLevel
      */
-    Logger.prototype.warn = function () { this.atLevel.apply(this, __spreadArray(['warn'], arguments, false)); };
+    warn(msg, ...args) { this.atLevel('warn', msg, ...args); }
     /**
      * Logs at INFO level.
      * @see atLevel
      */
-    Logger.prototype.info = function () { this.atLevel.apply(this, __spreadArray(['info'], arguments, false)); };
+    info(msg, ...args) { this.atLevel('info', msg, ...args); }
     /**
      * Logs at DEBUG level.
      * @see atLevel
      */
-    Logger.prototype.debug = function () { this.atLevel.apply(this, __spreadArray(['debug'], arguments, false)); };
+    debug(msg, ...args) { this.atLevel('debug', msg, ...args); }
     /**
      * Logs at TRACE level.
      * @see atLevel
      */
-    Logger.prototype.trace = function () { this.atLevel.apply(this, __spreadArray(['trace'], arguments, false)); };
+    trace(msg, ...args) { this.atLevel('trace', msg, ...args); }
     /**
      * Logs a message at the supplied level. The message may include placeholders {} which
      * will be substituted into the message string only if the message is actually logged.
@@ -146,14 +138,10 @@ var Logger = /** @class */ (function () {
      * @param {String|Error} msg the message to log, possibly with object placeholders
      * @param {Object[]} [objects] the objects to substitute into the log message
      */
-    Logger.prototype.atLevel = function (level, msg) {
-        var objects = [];
-        for (var _i = 2; _i < arguments.length; _i++) {
-            objects[_i - 2] = arguments[_i];
-        }
-        var titleCase = level[0].toUpperCase() + level.slice(1);
+    atLevel(level, msg, ...objects) {
+        let titleCase = level[0].toUpperCase() + level.slice(1);
         try {
-            if (this._logger["is".concat(titleCase, "Enabled")]()) {
+            if (this._logger[`is${titleCase}Enabled`]()) {
                 this.maybeLogWithThrowable(level, msg, objects) ||
                     this.writeLogLine(level, this._formatLogMessage(msg, level, 6), objects);
             }
@@ -161,45 +149,34 @@ var Logger = /** @class */ (function () {
         catch (err) {
             this._logger.error(this._formatLogMessage(err, "error", 0));
         }
-    };
-    Logger.prototype.maybeLogWithThrowable = function (level, msg, objects) {
+    }
+    maybeLogWithThrowable(level, msg, objects) {
         if (objects.length === 1) {
-            var obj = objects[0];
-            if ((obj instanceof Error || (obj.message && obj.name && obj.stack)) && !msg.includes("{}")) { //todo: better substitution detected
+            let obj = objects[0];
+            if ((obj instanceof Error || (obj.message && obj.name && obj.stack)) && !(msg instanceof Error) && !msg.includes("{}")) { //todo: better substitution detected
                 //log the basic message
                 this.writeLogLine(level, msg, objects);
                 //and log the exception
-                this.writeLogLine(level, "".concat(obj.name, " : ").concat(obj.message, "\n").concat(obj.stack));
+                this.writeLogLine(level, `${obj.name} : ${obj.message}\n${obj.stack}`);
                 return true;
             }
         }
         return false;
-    };
-    Logger.prototype.writeLogLine = function (level, message, objects) {
-        if (objects === void 0) { objects = []; }
-        var formatted = MessageFormatter.arrayFormat(message, objects).getMessage();
+    }
+    writeLogLine(level, message, objects = []) {
+        let formatted = MessageFormatter.arrayFormat(message, objects).getMessage();
         this._logger[level](formatted);
-    };
-    Object.defineProperty(Logger.prototype, "listener", {
-        /**
-         * The listener function attached to this logger.
-         * @return {*} the listener function
-         */
-        get: function () { return this._listener; },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(Logger.prototype, "name", {
-        /**
-         * The name of this logger
-         * @return {String} the logger name
-         */
-        get: function () { return this._name; },
-        enumerable: false,
-        configurable: true
-    });
-    return Logger;
-}());
+    }
+    /**
+     * The listener function attached to this logger.
+     */
+    get listener() { return this._listener; }
+    /**
+     * The name of this logger
+     */
+    get name() { return this._name; }
+}
+exports.Logger = Logger;
 /**
  * Creates a logger.
  * @see Logger
@@ -208,7 +185,7 @@ var Logger = /** @class */ (function () {
  * @param {*} [_listener] an optional listener to process log events.
  * @memberof log
  */
-module.exports = function (_name) {
+function default_1(_name) {
     return new Logger(_name);
-};
-module.exports.Logger = Logger;
+}
+exports.default = default_1;
